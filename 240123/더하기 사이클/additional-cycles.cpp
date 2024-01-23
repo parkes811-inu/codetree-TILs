@@ -14,8 +14,8 @@ int main() {
     int b = n % 10;
 
     if (n == 0) {
-        answer = 1;
-        return answer;
+        cout << 1;
+        return 0;
     }
     while(1) {
 
