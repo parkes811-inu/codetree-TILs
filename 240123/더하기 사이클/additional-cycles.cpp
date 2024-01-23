@@ -13,6 +13,10 @@ int main() {
     int a = n / 10;
     int b = n % 10;
 
+    if (n == 0) {
+        answer = 1;
+        return answer;
+    }
     while(1) {
 
         if(n == sum) {
