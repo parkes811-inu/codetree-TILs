@@ -9,11 +9,17 @@ int main() {
     vector<int> _size(3);
 
     int cnt = 0;
+    int flag = 0;
+
     for(int i = 0; i < 3; i++) {
         int a, b;
         cin >> a >> b;
         if( a == 1 && b == 1) {
             cnt ++;
+        }
+
+        if(a == b) {
+            flag++;
         }
         _size[i] = a;
         water[i] = b;
@@ -24,6 +30,13 @@ int main() {
         return 0;
     }
     
+    if(flag == 3) {
+        for(int i = 0; i < 3; i++) {
+            cout << water[i] << '\n';
+        }
+        return 0;
+    }
+
     for(int i = 0; i < 100; i++) {
         
         int temp = water[i % 3];
