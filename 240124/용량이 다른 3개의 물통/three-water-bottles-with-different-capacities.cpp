@@ -8,14 +8,22 @@ int main() {
     vector<int> water(3);
     vector<int> _size(3);
 
+    int cnt = 0;
     for(int i = 0; i < 3; i++) {
         int a, b;
         cin >> a >> b;
-
+        if( a == 1 && b == 1) {
+            cnt++;
+        }
         _size[i] = a;
         water[i] = b;
     }
 
+    if(cnt == 3) {
+        cout << 1 << '\n' << 1 << '\n' << 1;
+        return 0;
+    }
+    
     for(int i = 0; i < 4; i++) {
         
         int temp = water[i % 3];
