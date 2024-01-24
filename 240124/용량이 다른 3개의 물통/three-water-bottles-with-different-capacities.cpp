@@ -1,30 +1,45 @@
 #include <iostream>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
-
-void transferWater(int& from, int& to, int to_max) {
-    int transferable = min(from, to_max - to);
-    from -= transferable;
-    to += transferable;
-}
-
 int main() {
-    vector<int> capacity(3), water(3);
+    // 여기에 코드를 작성해주세요.
+    vector<int> water(3);
+    vector<int> _size(3);
 
+    int cnt = 0;
     for(int i = 0; i < 3; i++) {
-        cin >> capacity[i] >> water[i];
+        int a, b;
+        cin >> a >> b;
+        if( a == 1 && b == 1) {
+            cnt ++;
+        }
+        _size[i] = a;
+        water[i] = b;
     }
 
-    for(int i = 0; i < 100; i++) {
-        transferWater(water[0], water[1], capacity[1]);
-        transferWater(water[1], water[2], capacity[2]);
-        transferWater(water[2], water[0], capacity[0]);
+    if(cnt == 3) {
+        cout << 1 << '\n' << 1 << '\n' << 1;
+        return 0;
     }
+    
+    for(int i = 0; i < 100; i++) {
+        
+        int temp = water[i % 3];
+        water[(i + 1) % 3] = water[(i + 1) % 3] + water[i % 3];
+
+        if(water[(i + 1) % 3] > _size[(i + 1) % 3]) {
+            water[i % 3] = water[i % 3] - _size[(i + 1) % 3];
+            water[(i + 1) % 3] = _size[(i + 1) % 3];
+        }
+        else {
+            water[i % 3] = water[i % 3] - temp;
+        }
+    } 
 
     for(int i = 0; i < 3; i++) {
         cout << water[i] << '\n';
     }
-
     return 0;
 }
