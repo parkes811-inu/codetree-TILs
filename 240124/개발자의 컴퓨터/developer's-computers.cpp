@@ -20,8 +20,10 @@ int main() {
         }
     }
 
-    sort(time.begin(), time.end());
+    //sort(time.begin(), time.end());
 
-    cout << time[time.size() - 1];
+    //cout << time[time.size() - 1];
+    int answer = *max_element(time.begin(), time.end());
+    cout << answer;
     return 0;
 }
