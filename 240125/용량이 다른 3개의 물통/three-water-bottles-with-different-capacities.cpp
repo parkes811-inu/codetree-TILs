@@ -7,15 +7,14 @@ using namespace std;
 vector<pair<int, int>> bottle(3);
 
 void moveWater(int cur, int next) {
+    // 옮길 수 있는 물의 양 계산
+    int amount = min(bottle[cur].second, bottle[next].first - bottle[next].second);
 
-    if(bottle[cur].second > bottle[next].first) {
-        bottle[cur].second = bottle[cur].second - bottle[next].first;
-        bottle[next].second = bottle[next].first;
-        return;
-    }
-    bottle[next].second = bottle[next].second + bottle[cur].second;
-    bottle[cur].second = bottle[cur].second - bottle[cur].second;
+    // 물 옮기기
+    bottle[cur].second -= amount;
+    bottle[next].second += amount;
 }
+
 int main() {
     // 여기에 코드를 작성해주세요.
     for(int i = 0; i < 3; i++) {
