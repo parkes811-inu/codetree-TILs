@@ -12,6 +12,7 @@ int count = 1;
 
 int main() {
     // 여기에 코드를 작성해주세요.
+    ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
     cin >> a >> b;
     for(int i = 0; i < a.size(); i++) {
         answer.push_back(make_pair(a[i], i));
