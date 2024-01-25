@@ -8,7 +8,7 @@ string a;
 string b;
 vector<pair<char, int>> answer;
 string result = "";
-int count = 0;
+int count = 1;
 
 int main() {
     // 여기에 코드를 작성해주세요.
@@ -25,12 +25,12 @@ int main() {
         }
 
         if(answer[i].first == b[j]) {
-            count++;
             j++;
         }
 
         i++;
-        if(i == 26) {
+        if(i == 25) {
+            count++;
             i = 0;
         }
     }   
