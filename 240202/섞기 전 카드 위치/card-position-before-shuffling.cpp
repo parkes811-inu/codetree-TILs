@@ -25,7 +25,7 @@ int main() {
     for(int i = 0; i < n; i++) {
         cin >> list[i].second;
     }
-    sort(list.begin(), list.end(), compare);
+    sort(list.begin(), list.end());
     for(int i = 0; i < n; i++) {
         cout << list[i].second << '\n';
     }
