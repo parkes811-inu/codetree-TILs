@@ -8,7 +8,7 @@ int main() {
     cin >> n;
     while(1) {
 
-        if(n >= 1000) {
+        if(n > 1000) {
             cout << cnt;
             break;
         }
