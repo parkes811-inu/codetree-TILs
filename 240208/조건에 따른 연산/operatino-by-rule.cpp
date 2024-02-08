@@ -19,7 +19,7 @@ int main() {
         }
 
         if(n > 1000) {
-            cout << cnt;
+            cout << cnt << '\n';
             break;
         }
     }
