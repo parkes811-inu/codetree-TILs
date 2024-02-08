@@ -9,7 +9,6 @@ int main() {
     while(1) {
         if(n > 1000) {
             cout << n << '\n';
-            cout << cnt << '\n';
             break;
         }
 
