@@ -8,7 +8,7 @@ int main() {
     cin >> n;
     for(int i = 1; i <= 100; i++) {
         sum = sum + i;
-        if(sum > n) {
+        if(sum >= n) {
             answer = i;
             break;
         }
