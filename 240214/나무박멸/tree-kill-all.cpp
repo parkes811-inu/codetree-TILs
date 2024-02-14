@@ -167,7 +167,7 @@ void herbicide() {
 	pair<int, int> dir = { 1, 1 };
 
 	int dx[4] = { -1,  1, 1, -1 };
-	int dy[4] = { -1, 1, -1,  1 };
+	int dy[4] = { -1, -1, 1,  1 };
 
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
@@ -187,9 +187,6 @@ void herbicide() {
 
 					if (OutOfRange(nx, ny) == false) {
 						break;
-					}
-					if (herb[nx][ny] > 0) {
-						continue;
 					}
 					if (tree[nx][ny] <= 0) {
 						break;
@@ -223,7 +220,7 @@ void herbicide() {
 				if (OutOfRange(nx, ny) == false) {
 					break;
 				}
-				if (tree[nx][ny] <= 0) {
+				if (tree[nx][ny] < 0) {
 					break;
 				}
 				if (tree[nx][ny] == 0) {
