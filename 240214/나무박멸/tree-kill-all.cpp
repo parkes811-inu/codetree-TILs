@@ -3,231 +3,251 @@
 #include <string>
 #include <vector>
 
+#define MAX 22
+#define DIR 4
+
 using namespace std;
 
 int n, m, k, c;
-int map[21][21];
 
+int tree[MAX][MAX];
+int addTree[MAX][MAX];
+int herb[MAX][MAX];
 
-int dx[4] = {-1,  0, 1, 0};
-int dy[4] = { 0, -1, 0, 1};
+int dx[DIR] = { -1, 0, 1, 0 };
+int dy[DIR] = { 0, 1, 0, -1 };
 
-
-// 2번 번식을 동시에 하기 위해 
-// map과 같은 크기의 배열 선언
-int breedTree[21][21];
-
-// 3번 제초제의 시간을 가지고 있어야 하기 때문에
-// map과 같은 크기의 배열 선언
-int herb[21][21];
 int answer;
 
-
-// 1-1. 상, 하, 좌, 우 4방향에 나무를 검사
-int cntTree(int x, int y) {
-    int cnt = 0;
-
-    for(int i = 0; i < 4; i++) {
-        int nx = x + dx[i];
-        int ny = y + dy[i];
-
-        if(nx < 0 || ny < 0 || nx >= n || ny >= n || map[x][y] == -1) {
-            continue;
-        }
-
-        if(map[nx][ny] > 0 && map[x][y] != 0) {
-            cnt++;
-        }
-    }
-
-    return cnt;
-}   
-
-// 1. 인접한 나무의 개수 만큼 나무 크기 증가
-void GrowTree() {
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            int cnt = cntTree(i, j);
-            if(cnt > 0) {
-                map[i][j] = map[i][j] + cnt;
-            }
-        }
-    }
+bool OutOfRange(int x, int y) {
+	if (x > 0 && y > 0 && x <= n && y <= n) {
+		return true;
+	}
+	return false;
 }
 
+void init() {
 
-// 2. 기존에 있던 나무들은 인접한 4개의 칸 중 벽, 다른 나무, 제초제가 모두 없는 칸에 번식
+	cin >> n >> m >> k >> c;
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			cin >> tree[i][j];
+		}
+	}
+}
+
+void print() {
+
+	cout << '\n';
+	cout << "-------------------------\n";
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			cout << tree[i][j] << ' ';
+		}
+		cout << '\n';
+	}
+	cout << "-------------------------\n";
+}
+
+// 1. 인접한 네 개의 칸 중 나무가 있는 칸의 수만큼 나무가 성장합니다. 성장은 모든 나무에게 동시에 일어납니다.
+// - 모든 나무에게 동시에 일어나지만, 나무의 크기에 영향을 받는 것이 아니기 때문에
+// - 따로 배열을 만들어 진행할 필요가 없다. -> 단순 네 개의 칸 중 나무가 있는지 없는지 여부에 따라 크기가 증가
+void growTree() {
+	
+	// 맵 전체에 대해 검사
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			// 나무가 있는 곳을 세기 위한 변수
+			int cnt = 0;
+			
+			// 나무가 없는 곳은 생략하면 되기 때문에continue; 사용
+			if(tree[i][j] == 0) {
+				continue;
+			}
+			
+			for (int dir = 0; dir < 4; dir++) {
+				int nx = i + dx[dir];
+				int ny = j + dy[dir];
+
+				if (OutOfRange(nx, ny) == false || tree[nx][ny] <= 0) {
+					continue;
+				}
+				
+				if (tree[nx][ny] > 0) {
+					cnt++;
+				}
+			}
+			if (tree[i][j] > 0) {
+				tree[i][j] = tree[i][j] + cnt;
+			}
+		}
+	}
+}
+
+// 2. 기존에 있던 나무들과 인접한 4개의 칸중 벽, 다른 나무, 제초제가 없는 칸에 번식 진행
+// - 현재 칸 / 번식이 가능한 카의 개수 (나머지는 버림)
+// - 번식의 과정은 모든 나무에서 동시에 일어난다 
+// -> 나무의 크기가 한 번에 바뀌어야 하기 때문에 번식할 개수를 담는 배열을 하나 만듬.
 void breeding() {
-    
-    // 동시에 반영해야 하기 때문에 같은 크기의 배열을 만들어준다.
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            breedTree[i][j] = 0;;
-        }
-    }
 
+	// 나무의 크기를 한 번에 바꾸기 위한 임시 배열
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			addTree[i][j] = 0;
+		}
+	}
 
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            
-            // map[][]이 0보다 작으면 원래 비어있던 공간이거나, 벽이다.
-            if(map[i][j] <= 0) {
-                continue;
-            }
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			int cnt = 0;
 
-            int cnt = 0;
-            // 4 방향 검사해서 비어있는 공간을 센다.
-            for(int k = 0; k < 4; k++) {
-                int nx = i + dx[k];
-                int ny = j + dy[k];
+			// 현재의 칸에 나무가 있어야 번식이 가능하기 때문에 0 보다 아래는 건너뜀
+			if (tree[i][j] <= 0) {
+				continue;
+			}
 
-                if(nx >= n || ny >= n || nx < 0 || ny < 0 || map[nx][ny] < 0) {
-                    continue;
-                }
+			// 4방향 검사 후 cnt증가
+			for (int k = 0; k < 4; k++) {
+				int nx = i + dx[k];
+				int ny = j + dy[k];
 
-                if(herb[nx][ny] > 0) {
-                    continue;
-                }
+				if (OutOfRange(nx, ny) == false || tree[nx][ny] != 0) {
+					continue;
+				}
 
-                if(map[nx][ny] == 0) {
-                    cnt++;
-                }
-            }
+				if (tree[nx][ny] == 0) {
+					cnt++;
+				}
+			}
 
-            // 4방향 검사해서 얻은 cnt만큼 번식 진행
-            for(int m = 0; m < 4; m++) {
-                int nx = i + dx[m];
-                int ny = j + dy[m];
+			// addTree라는 임시 배열에 번식될 값을 넣어줌
+			for (int m = 0; m < 4; m++) {
+				int nx = i + dx[m];
+				int ny = j + dy[m];
+				
+				if (OutOfRange(nx, ny) == false || tree[nx][ny] != 0) {
+					continue;
+				}
 
-                if(nx > n || ny > n || nx < 0 || ny < 0) {
-                    continue;
-                }
+				if (tree[nx][ny] == 0) {
+					addTree[nx][ny] = addTree[nx][ny] + tree[i][j] / cnt;
+				}
+			}
 
-                if(herb[nx][ny] > 0) {
-                    continue;
-                }
-                
-                if(map[nx][ny] == 0) {
-                    breedTree[nx][ny] = breedTree[nx][ny] + map[i][j] / cnt;
-                }
+		}
+	}
 
-            }
-
-        }
-    }
-
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            map[i][j] = map[i][j] + breedTree[i][j];
-        }
-    }
+	// 임시 저장되었던 배열들에 값을 tree 배열에 더해준다.
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			if (addTree[i][j] > 0) {
+				tree[i][j] = tree[i][j] + addTree[i][j];
+			}
+		}
+	}
 }
+/*
+* 각 칸 중 제초제를 뿌렸을 때 나무가 가장 많이 박멸되는 칸에 제초제를 뿌립니다. 
+나무가 없는 칸에 제초제를 뿌리면 박멸되는 나무가 전혀 없는 상태로 끝이 나지만, 
+나무가 있는 칸에 제초제를 뿌리게 되면 4개의 대각선 방향으로 k칸만큼 전파되게 됩니다. 
+단 전파되는 도중 벽이 있거나 나무가 아얘 없는 칸이 있는 경우, 그 칸 까지는 제초제가 뿌려지며 
+그 이후의 칸으로는 제초제가 전파되지 않습니다. 
+제초제가 뿌려진 칸에는 c년만큼 제초제가 남아있다가 c+1년째가 될 때 사라지게 됩니다. 
+제초제가 뿌려진 곳에 다시 제초제가 뿌려지는 경우에는 새로 뿌려진 해로부터 다시 c년동안 제초제가 유지됩니다.
 
-// 3. herbicide 제초제의 경우 K의 범위 만큼 대각선으로 퍼짐
-// 벽이 있는 경우 가로막혀서ㅓ 전파되지 않는다.
+*/
 void herbicide() {
-    // 나무의 수가 동일한 칸이 있는 경우를 대비해
-    // dx, dy 순서를 행이 작은 순서, 열이 작은 순서로
-    int dx[4] = {-1,  1, 1, -1};
-    int dy[4] = {-1, -1, 1,  1};
 
-    int maxDel = 0;
-    pair<int, int> dir = {0, 0};
+	int maxDel = 0;
+	pair<int, int> dir = { 1, 1 };
 
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
+	int dx[4] = { -1,  1, 1, -1 };
+	int dy[4] = { -1, -1, 1,  1 };
 
-            // map이 0보다 작으면 벽이거나, 제초제가 뿌릴 필요가 없다.
-            if(map[i][j] <= 0) {
-                continue;
-            }
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			
+			if (tree[i][j] <= 0) {
+				continue;
+			}
 
-            int cnt = map[i][j];
+			int cnt = tree[i][j];
+			for (int d = 0; d < 4; d++) {
+				int nx = i;
+				int ny = j;
 
-            // 4방향 검사를 하는데, 제초제 확산 범위 k 만큼 간다.
-            for(int d = 0; d < 4; d++) {
-                int nx = i;
-                int ny = j;
-                
-                // 방향 별 k 범위 만큼 가보고, 갈 수 없는 경우 break;
-                for(int m = 0; m < k; m++) {
-                    nx = nx + dx[d];
-                    ny = ny + dy[d];
+				for (int m = 1; m <= k; m++) {
+					nx = nx + dx[d];
+					ny = ny + dy[d];
 
-                    if(nx >= n || ny >= n || nx < 0 || ny < 0 || map[nx][ny] <= 0) {
-                        break;
-                    }
-                    cnt = cnt + map[nx][ny];
-                }
-            }
+					if (OutOfRange(nx, ny) == false) {
+						break;
+					}
+					if (tree[nx][ny] <= 0) {
+						break;
+					}
+						
+					cnt = cnt + tree[nx][ny];
+				}
+			}
 
-            if(maxDel < cnt) {
-                maxDel = cnt;
-                dir.first = i;
-                dir.second = j;
-            }
-        }
-    }
+			if (maxDel < cnt) {
+				maxDel = cnt;
+				dir.first = i;
+				dir.second = j;
+			}
+		}
+	}
+	answer = answer + maxDel;
 
-    answer = answer + maxDel;
+	if (tree[dir.first][dir.second] > 0) {
+		tree[dir.first][dir.second] = 0;
+		herb[dir.first][dir.second] = c;
 
-    if(map[dir.first][dir.second] > 0) {
-        map[dir.first][dir.second] = 0;
-        herb[dir.first][dir.second] = c;
+		for (int d = 0; d < 4; d++) {
+			int nx = dir.first;
+			int ny = dir.second;
 
-        for(int i = 0; i < 4; i++) {
-            int nx = dir.first;
-            int ny = dir.second;
+			for (int m = 1; m <= k; m++) {
+				nx = nx + dx[d];
+				ny = ny + dy[d];
 
-            for(int j = 0; j < k; j++) {
-                nx = nx + dx[i];
-                ny = ny + dy[i];
-                
-                if(nx >= n || ny >= n || nx < 0 || ny < 0 || map[nx][ny] < 0) {
-                    break;  
-                }
-
-                if(map[nx][ny] == 0) {
-                    herb[nx][ny] = c;
-                    break;
-                }
-
-                map[nx][ny] = 0;
-                herb[nx][ny] = c;
-            }
-        }
-    }
-
+				if (OutOfRange(nx, ny) == false || tree[nx][ny] <= 0) {
+					break;
+				}
+				
+				if (tree[nx][ny] == 0) {
+					herb[nx][ny] = c;
+					break;
+				}
+				tree[nx][ny] = 0;
+				herb[nx][ny] = c;
+			}
+		}
+	}
 }
 
-// 제초제의 기간을 1년 감소 
 void DelHerb() {
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            if(herb[i][j] > 0) {
-                herb[i][j] = herb[i][j] - 1;
-            }
-        }
-    }
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			if (herb[i][j] > 0) {
+				herb[i][j] = herb[i][j] - 1;
+			}
+		}
+	}
 }
 
-int main() {
+int main(void) {
 
-    cin >> n >> m >> k >> c;
 
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            cin >> map[i][j];
-        }
-    }
-
-    for(int start = 0; start < m; start++) {
-        GrowTree();
-        breeding();
-        DelHerb();
-        herbicide();
-    }
-    cout << answer;
-
-    return 0;
+	init();
+	for (int i = 1; i <= m; i++) {
+		growTree();
+		breeding();
+		DelHerb();
+		herbicide();
+	}
+	cout << answer;
+	return 0;
 }
