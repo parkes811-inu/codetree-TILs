@@ -20,7 +20,7 @@ int dy[DIR] = { 0, 1, 0, -1 };
 int answer;
 
 bool OutOfRange(int x, int y) {
-	if (x > 0 && y > 0 && x <= n && y <= n) {
+	if (x >= 1 && y >= 1 && x <= n && y <= n) {
 		return true;
 	}
 	return false;
@@ -115,7 +115,9 @@ void breeding() {
 				if (OutOfRange(nx, ny) == false || tree[nx][ny] != 0) {
 					continue;
 				}
-
+				if (herb[nx][ny] > 0) {
+					continue;
+				}
 				if (tree[nx][ny] == 0) {
 					cnt++;
 				}
@@ -129,7 +131,9 @@ void breeding() {
 				if (OutOfRange(nx, ny) == false || tree[nx][ny] != 0) {
 					continue;
 				}
-
+				if (herb[nx][ny] > 0) {
+					continue;
+				}
 				if (tree[nx][ny] == 0) {
 					addTree[nx][ny] = addTree[nx][ny] + tree[i][j] / cnt;
 				}
@@ -163,7 +167,7 @@ void herbicide() {
 	pair<int, int> dir = { 1, 1 };
 
 	int dx[4] = { -1,  1, 1, -1 };
-	int dy[4] = { -1, -1, 1,  1 };
+	int dy[4] = { -1, 1, -1,  1 };
 
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
@@ -183,6 +187,9 @@ void herbicide() {
 
 					if (OutOfRange(nx, ny) == false) {
 						break;
+					}
+					if (herb[nx][ny] > 0) {
+						continue;
 					}
 					if (tree[nx][ny] <= 0) {
 						break;
@@ -213,10 +220,12 @@ void herbicide() {
 				nx = nx + dx[d];
 				ny = ny + dy[d];
 
-				if (OutOfRange(nx, ny) == false || tree[nx][ny] <= 0) {
+				if (OutOfRange(nx, ny) == false) {
 					break;
 				}
-				
+				if (tree[nx][ny] <= 0) {
+					break;
+				}
 				if (tree[nx][ny] == 0) {
 					herb[nx][ny] = c;
 					break;
@@ -248,6 +257,13 @@ int main(void) {
 		DelHerb();
 		herbicide();
 	}
+	/*growTree();
+	print();
+	breeding();
+	print();
+	herbicide();
+	print();*/
+
 	cout << answer;
 	return 0;
 }
