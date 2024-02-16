@@ -16,7 +16,7 @@ int main() {
         for(int k = 0; k < n - i; k++) {
             cout << alpha << ' ';
             alpha++;
-            if(alpha == 'Z') {
+            if(alpha > 'Z') {
                 alpha = 'A';
             }
         }
