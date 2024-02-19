@@ -32,11 +32,11 @@
 # 🥇 실전 훈련
 |총 문제 수|티어|유형|
 |---:|---|---|
-|1|![Gold4][g4] ~ ![Gold4][g4]|`Simulation` `dx dy technique`|
+|1|![Gold4][g4] ~ ![Gold4][g4]|`dx dy technique` `Simulation`|
 
 |기록분류|이름|티어|유형|상태|최근 제출 코드|
 |---|---|---|---|---|---|
-|기출문제|[나무박멸](https://www.codetree.ai/training-field/frequent-problems/problems/tree-kill-all)|![Gold4][g4]|`Simulation` `dx dy technique`|![Failed][failed]|[링크](https://github.com/parkes811-inu/codetree-TILs/blob/main/240213/%EB%82%98%EB%AC%B4%EB%B0%95%EB%A9%B8/tree-kill-all.cpp)|
+|기출문제|[나무박멸](https://www.codetree.ai/training-field/frequent-problems/problems/tree-kill-all)|![Gold4][g4]|`Simulation` `dx dy technique`|![Passed][passed]|[링크](https://github.com/parkes811-inu/codetree-TILs/blob/main/240213/%EB%82%98%EB%AC%B4%EB%B0%95%EB%A9%B8/tree-kill-all.cpp)|
 
 
 
