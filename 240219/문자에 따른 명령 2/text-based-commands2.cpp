@@ -3,8 +3,10 @@ using namespace std;
 
 string cmd;
 
-int dx[4] = {0, 1, 0, -1};
-int dy[4] = {-1, 0, -1, 0};
+//int dx[4] = {0, 1, 0, -1};
+//int dy[4] = {-1, 0, -1, 0};
+int dx[4] = {1, 0, -1, 0}, dy[4] = {0, -1, 0, 1};
+
 int dir = 0;
 pair<int, int> cur;
 
