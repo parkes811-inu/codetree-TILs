@@ -29,7 +29,7 @@ int main() {
         map[x][y] = alpha++;
         x = x + dx[dir];
         y = y + dy[dir];
-        if(alpha == 'Z') {
+        if( alpha > 'Z') {
             alpha = 'A';
         }
     }
