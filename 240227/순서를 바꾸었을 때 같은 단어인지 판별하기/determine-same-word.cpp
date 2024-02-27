@@ -9,14 +9,25 @@ int main() {
     cin >> a >> b;
 
     sort(a.begin(), a.end());
-    
     sort(b.begin(), b.end());
-
-    for(int i = 0; i < a.size(); i++) {
+    int sz = 0;
+    if(a.size() > b.size()) {
+        for(int i = 0; i < a.size(); i++) {
         if(a[i] != b[i]) {
             cout << "No";
             return 0;
         }
+    }
+    cout << "Yes";
+    }
+    else {
+        sz = b.size();
+        for(int i = 0; i < b.size(); i++) {
+        if(a[i] != b[i]) {
+            cout << "No";
+            return 0;
+        }
+    }
     }
     cout << "Yes";
     return 0;
