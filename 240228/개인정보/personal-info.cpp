@@ -34,6 +34,8 @@ int main() {
 
     cout << "name\n"; 
     for(int i = 0; i < 5; i++) {
+        cout << fixed;
+        cout.precision(1);
         cout << list[i].name << ' ' << list[i].height << ' '
         << list[i].weight << '\n';
     }
@@ -44,6 +46,8 @@ int main() {
 
     cout << "height\n"; 
     for(int i = 0; i < 5; i++) {
+        cout << fixed;
+        cout.precision(1);
         cout << list[i].name << ' ' << list[i].height << ' '
         << list[i].weight << '\n';
     }
