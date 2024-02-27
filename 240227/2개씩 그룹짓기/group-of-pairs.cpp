@@ -18,9 +18,13 @@ int main() {
     }
     sort(num.begin(), num.end());
 
+    for(int i = 0; i < num.size(); i++) {
+        // cout << num[i] << ' ';
+    }
+
     int max = -999;
     for(int i = 0; i < n; i++) {
-        int cur = num[i] + num[2 * n - i];
+        int cur = num[i] + num[2 * n - i - 1];
         if(cur > max) {
             max = cur;
         }
