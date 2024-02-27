@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <vector>
 
+using namespace std;
+
 vector<string> answer;
 string s;
 int n;
