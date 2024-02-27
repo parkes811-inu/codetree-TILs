@@ -1,6 +1,7 @@
 #include <iostream>
 #include <tuple>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 int n;
@@ -21,6 +22,7 @@ int main() {
         cin >> a >> b >> c;
         weather.push_back(make_tuple(a, b, c));
     }
+    sort(weather.begin(), weather.end(), cmp);
 
     for(int i = 0; i < n; i++) {
         if(get<2>(weather[i]) == "Rain") {
