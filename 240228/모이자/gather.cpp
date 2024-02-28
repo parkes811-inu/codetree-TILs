@@ -4,7 +4,7 @@
 using namespace std;
 int arr[101];
 int n;
-int mini = 999;
+int mini = 9999999;
 
 int main() {
     // 여기에 코드를 작성해주세요.
