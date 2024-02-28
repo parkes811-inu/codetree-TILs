@@ -29,6 +29,7 @@ int main() {
                 cnt++;
                 if(cnt == m) {
                     answer++;
+                    break;
                 }
             }
             else {
@@ -46,6 +47,7 @@ int main() {
                 cnt++;
                 if(cnt == m) {
                     answer++;
+                    break;
                 }
             }
             else {
