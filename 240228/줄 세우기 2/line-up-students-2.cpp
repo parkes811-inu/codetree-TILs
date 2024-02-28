@@ -17,7 +17,7 @@ bool cmp(student a, student b) {
     if(a.height == b.height) {
         return a.weight > b.weight;
     }
-    return a.weight < b.weight;
+    return a.height < b.height;
 }
 
 int main() {
