@@ -8,6 +8,11 @@ bool checkZero = false;
 int main() {
     // 여기에 코드를 작성해주세요.
     cin >> s;
+    if(s.size() == 1) {
+        cout << 0 << '\n';
+        return 0;
+    }
+    
     for(int i = 0; i < s.size(); i++) {
         if(s[i] == '0') {
             checkZero = true;
