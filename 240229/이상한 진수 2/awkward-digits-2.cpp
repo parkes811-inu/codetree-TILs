@@ -12,7 +12,7 @@ int main() {
         cout << 0 << '\n';
         return 0;
     }
-    
+
     for(int i = 0; i < s.size(); i++) {
         if(s[i] == '0') {
             checkZero = true;
@@ -23,7 +23,7 @@ int main() {
         for(int i = 0; i < s.size(); i++) {
             answer = answer + pow(2, s.size() - 1 - i);
         }
-        cout << answer;
+        cout << answer - 1;
         return 0;
     }
 
