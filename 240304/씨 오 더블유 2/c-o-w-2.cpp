@@ -11,8 +11,11 @@ int main() {
     }
 
     for(int i = 0; i < n - 2; i++) {
-        for(int j = i + 1; j < n - 1; j++) {
-            for(int k = i + 2; k < n; k++) {
+        for(int j = 0; j < n - 1; j++) {
+            for(int k = 0; k < n; k++) {
+                if(i == j || i == k || j == k) {
+                    continue;
+                }
                 if(a[i] == 'C' && a[j] == 'O' && a[k] == 'W') {
                     cnt++;
                 }
