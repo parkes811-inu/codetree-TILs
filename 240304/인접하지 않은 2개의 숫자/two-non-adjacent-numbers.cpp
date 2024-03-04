@@ -16,7 +16,7 @@ int main() {
     for(int i = 0; i < n - 1; i++) {
         int temp = 0;
         for(int j = i + 1; j < n; j++) {
-            if(i == j || abs(i - j) == 1) {
+            if(abs(i - j) == 1) {
                 continue;
             }   
             temp = arr[i] + arr[j];
