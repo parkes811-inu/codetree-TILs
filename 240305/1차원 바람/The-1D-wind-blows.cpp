@@ -69,7 +69,7 @@ int main() {
             up--;
         }
 
-        while(down > 0) {
+        while(down <= n) {
             if(findNext(down, down + 1) == false) break;
 
             if(findNext(down, down + 1)) {
@@ -77,7 +77,7 @@ int main() {
                 if(d2 == 'R') d2 = 'L';
                 else if(d2 == 'L') d2 = 'R';
             }
-            down--;
+            down++;
         }
     }
 
