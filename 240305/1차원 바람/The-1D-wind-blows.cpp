@@ -40,8 +40,9 @@ void moveTo(int start, char dir) {
 
 bool findNext(int x, int y) {
     if(y < 1 || y > n) return false;
-    for(int i = 0; i < m; i++) {
+    for(int i = 1; i <= m; i++) {
         if(map[x][i] == map[y][i]) {
+            //cout << map[x][i] << ' ' << map[y][i] << '\n';
             return true;
         }
     }
