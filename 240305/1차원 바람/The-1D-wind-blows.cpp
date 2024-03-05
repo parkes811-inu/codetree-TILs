@@ -15,7 +15,6 @@
 using namespace std;
 int n, m, q, start;
 char d;
-int dir[2];
 int map[101][101];
 
 void moveTo(int start, char dir) {
@@ -68,7 +67,7 @@ int main() {
         if(d == 'L') d = 'R';
         char d1, d2;
         d1 = d; d2 = d;
-        while(up >= 1) {
+        while(up - 1 > 1) {
         if(findNext(up, up - 1) == false) break;
         if(findNext(up, up - 1)) {
             moveTo(up - 1, d1);
@@ -77,7 +76,7 @@ int main() {
         }
         up = up - 1;
         }
-        while(down <= n) {
+        while(down + 1 <= n) {
             if(findNext(down, down + 1) == false) break;
         if(findNext(down, down + 1)) {
             moveTo(down + 1, d2);
