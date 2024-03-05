@@ -3,7 +3,7 @@
 using namespace std;
 int n, m, q, start;
 char d;
-int map[101][101];
+int map[102][102];
 
 void moveTo(int start, char dir) {
     // for (int i = start 부터 1까지 or n 까지)
