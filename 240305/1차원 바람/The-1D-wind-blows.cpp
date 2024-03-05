@@ -67,7 +67,7 @@ int main() {
         if(d == 'L') d = 'R';
         char d1, d2;
         d1 = d; d2 = d;
-        while(up - 1 > 1) {
+        while(up - 1 >= 1) {
         if(findNext(up, up - 1) == false) break;
         if(findNext(up, up - 1)) {
             moveTo(up - 1, d1);
