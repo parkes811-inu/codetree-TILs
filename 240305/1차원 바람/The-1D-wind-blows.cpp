@@ -1,17 +1,5 @@
 #include <iostream>
 
-/*
-    전파 조건
-    1. 현재 행과 나아가려는 행을 비교했을 떄,
-    단 하나라도 같은 열에 같은 숫자가 있는 경우 
-    
-    2. 같은 숫자가 하나도 없거나, 전파가 끝에 
-    다다른 경우 전파 종료
-    
-    ** 전파가 현재 행이 밀렸던 반대 방향으로 
-    한 칸씩 밀리게 된다.
-    
-*/
 using namespace std;
 int n, m, q, start;
 char d;
@@ -41,7 +29,6 @@ bool findNext(int x, int y) {
     if(y < 1 || y > n) return false;
     for(int i = 1; i <= m; i++) {
         if(map[x][i] == map[y][i]) {
-            //cout << map[x][i] << ' ' << map[y][i] << '\n';
             return true;
         }
     }
@@ -63,28 +50,33 @@ int main() {
         moveTo(start, d);
         int up = start;
         int down = start;
+
         if(d == 'R') d = 'L';
         if(d == 'L') d = 'R';
+
         char d1, d2;
         d1 = d; d2 = d;
-        while(up - 1 >= 1) {
+
+        while(up > 0) {
         if(findNext(up, up - 1) == false) break;
+
         if(findNext(up, up - 1)) {
             moveTo(up - 1, d1);
             if(d1 == 'R') d1 = 'L';
             else if(d1 == 'L') d1 = 'R';
         }
-        up = up - 1;
+            up--;
         }
-        while(down + 1 <= n) {
-            if(findNext(down, down + 1) == false) break;
+
+        while(down <= n) {
+        if(findNext(down, down + 1) == false) break;
+
         if(findNext(down, down + 1)) {
             moveTo(down + 1, d2);
             if(d2 == 'R') d2 = 'L';
             else if(d2 == 'L') d2 = 'R';
         }
-        down = down + 1;
-
+            down++;
         }
     }
 
