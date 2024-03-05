@@ -17,6 +17,7 @@ void moveTo(int start, char dir) {
     }
 
     if(dir == 'R') {
+        //cout << 'R';
         int temp = map[start][1];
         for(int j = 1; j <= m; j++) {
             map[start][j] = map[start][j + 1];
@@ -26,7 +27,7 @@ void moveTo(int start, char dir) {
 }
 
 bool findNext(int x, int y) {
-    if(y < 1 || y > n) return false;
+    //if(y < 1 || y > n) return false;
     for(int i = 1; i <= m; i++) {
         if(map[x][i] == map[y][i]) {
             return true;
@@ -52,31 +53,31 @@ int main() {
         int down = start;
 
         if(d == 'R') d = 'L';
-        if(d == 'L') d = 'R';
+        else if(d == 'L') d = 'R';
 
         char d1, d2;
         d1 = d; d2 = d;
 
         while(up > 0) {
-        if(findNext(up, up - 1) == false) break;
+            if(findNext(up, up - 1) == false) break;
 
-        if(findNext(up, up - 1)) {
-            moveTo(up - 1, d1);
-            if(d1 == 'R') d1 = 'L';
-            else if(d1 == 'L') d1 = 'R';
-        }
+            if(findNext(up, up - 1)) {
+                moveTo(up - 1, d1);
+                if(d1 == 'R') d1 = 'L';
+                else if(d1 == 'L') d1 = 'R';
+            }
             up--;
         }
 
-        while(down <= n) {
-        if(findNext(down, down + 1) == false) break;
+        while(down > 0) {
+            if(findNext(down, down + 1) == false) break;
 
-        if(findNext(down, down + 1)) {
-            moveTo(down + 1, d2);
-            if(d2 == 'R') d2 = 'L';
-            else if(d2 == 'L') d2 = 'R';
-        }
-            down++;
+            if(findNext(down, down + 1)) {
+                moveTo(down + 1, d2);
+                if(d2 == 'R') d2 = 'L';
+                else if(d2 == 'L') d2 = 'R';
+            }
+            down--;
         }
     }
 
