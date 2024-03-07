@@ -16,6 +16,9 @@ int main() {
 
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
+            if(i == j) {
+                continue;
+            }
             int temp = sum - (arr[i] + arr[j]);
             answer = min(answer, abs(temp - s));
         }
