@@ -1,76 +1,84 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
 const int N = 4;
 vector<vector<int>> board(N, vector<int>(N));
 
-void moveTiles(vector<int>& line) {
-    vector<int> newLine;
-    for (int i = 0; i < line.size(); i++) {
-        if (line[i] != 0) {
-            newLine.push_back(line[i]);
-        }
-    }
-
-    for (int i = 0; i < newLine.size() - 1; i++) {
-        if (newLine[i] == newLine[i + 1]) {
-            newLine[i] *= 2;
-            newLine[i + 1] = 0;
-        }
-    }
-
-    line.clear();
-    for (int i = 0; i < newLine.size(); i++) {
-        if (newLine[i] != 0) {
-            line.push_back(newLine[i]);
-        }
-    }
-
-    while (line.size() < N) {
-        line.push_back(0);
-    }
-}
-
-void rotateBoard() {
-    vector<vector<int>> temp(N, vector<int>(N));
-    for (int i = 0; i < N; ++i) {
-        for (int j = 0; j < N; ++j) {
-            temp[j][N - 1 - i] = board[i][j];
-        }
-    }
-    board = temp;
-}
-
+// 타일을 왼쪽으로 이동시키는 함수
 void moveLeft() {
     for (int i = 0; i < N; i++) {
-        moveTiles(board[i]);
+        int last = -1, pos = 0;
+        for (int j = 0; j < N; j++) {
+            if (board[i][j] == 0) continue;
+            if (last == -1 || board[i][j] != board[i][last]) {
+                last = pos;
+                board[i][pos++] = board[i][j];
+            } else {
+                board[i][last] *= 2;
+                board[i][j] = 0;
+                last = -1;
+            }
+        }
+        for (int j = pos; j < N; j++) board[i][j] = 0;
     }
 }
 
+// 타일을 오른쪽으로 이동시키는 함수
 void moveRight() {
     for (int i = 0; i < N; i++) {
-        reverse(board[i].begin(), board[i].end());
-        moveTiles(board[i]);
-        reverse(board[i].begin(), board[i].end());
+        int last = N, pos = N - 1;
+        for (int j = N - 1; j >= 0; j--) {
+            if (board[i][j] == 0) continue;
+            if (last == N || board[i][j] != board[i][last]) {
+                last = pos;
+                board[i][pos--] = board[i][j];
+            } else {
+                board[i][last] *= 2;
+                board[i][j] = 0;
+                last = N;
+            }
+        }
+        for (int j = pos; j >= 0; j--) board[i][j] = 0;
     }
 }
 
+// 타일을 위로 이동시키는 함수
 void moveUp() {
-    rotateBoard(); // Rotate clockwise
-    moveLeft();
-    rotateBoard(); // 3 times to get original orientation
-    rotateBoard();
-    rotateBoard();
+    for (int j = 0; j < N; j++) {
+        int last = -1, pos = 0;
+        for (int i = 0; i < N; i++) {
+            if (board[i][j] == 0) continue;
+            if (last == -1 || board[i][j] != board[last][j]) {
+                last = pos;
+                board[pos++][j] = board[i][j];
+            } else {
+                board[last][j] *= 2;
+                board[i][j] = 0;
+                last = -1;
+            }
+        }
+        for (int i = pos; i < N; i++) board[i][j] = 0;
+    }
 }
 
+// 타일을 아래로 이동시키는 함수
 void moveDown() {
-    rotateBoard(); // Rotate clockwise 3 times
-    rotateBoard();
-    rotateBoard();
-    moveLeft();
-    rotateBoard(); // Once to get original orientation
+    for (int j = 0; j < N; j++) {
+        int last = N, pos = N - 1;
+        for (int i = N - 1; i >= 0; i--) {
+            if (board[i][j] == 0) continue;
+            if (last == N || board[i][j] != board[last][j]) {
+                last = pos;
+                board[pos--][j] = board[i][j];
+            } else {
+                board[last][j] *= 2;
+                board[i][j] = 0;
+                last = N;
+            }
+        }
+        for (int i = pos; i >= 0; i--) board[i][j] = 0;
+    }
 }
 
 void printBoard() {
@@ -89,25 +97,25 @@ int main() {
         }
     }
 
-    char dir;
-    cin >> dir; // 방향 입력 ('L', 'R', 'U', 'D')
+    char d;
+    cin >> d; // 방향 입력 ('L', 'R', 'U', 'D')
 
-    switch (dir) {
-        case 'L':
-            moveLeft();
-            break;
-        case 'R':
-            moveRight();
-            break;
-        case 'U':
-            moveUp();
-            break;
-        case 'D':
-            moveDown();
-            break;
+    switch (d) {
+    case 'L':
+        moveLeft();
+        break;
+    case 'R':
+        moveRight();
+        break;
+    case 'U':
+        moveUp();
+        break;
+    case 'D':
+        moveDown();
+        break;
     }
 
-    printBoard(); // 최종 결과 출력
+    printBoard(); // 결과 출력
 
     return 0;
 }
