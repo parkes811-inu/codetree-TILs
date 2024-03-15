@@ -31,18 +31,16 @@ void toBomb(int x, int y, int cnt) {
 
 int countPair() {
     int cnt = 0;
-    for(int i = 0; i < n; i++) { // n - 1 대신 n으로 변경
-        for(int j = 0; j < n; j++) { // n - 1 대신 n으로 변경
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) { 
             if(i + 1 > n || j + 1 > n) {
                 continue;
             }
 
             if(map[i][j] == map[i][j + 1] && map[i][j] > 0) {
-               // cout << "좌우 비교 ["  << i << ", " << j << "], " << "["<< i << ", " <<j  + 1 << "] \n";
                 cnt++;
             }
             if(map[i][j] == map[i + 1][j] && map[i][j] > 0) {
-                //cout << "상하 비교 ["  << i << ", " << j << "], " << "["<< i << ", " <<j  + 1 << "] \n";
                 cnt++;
             }
         }
@@ -84,7 +82,6 @@ void init() {
         }
     }  
 }
-// 완전 탐색 + dx, dy
 
 int main() {
     // 여기에 코드를 작성해주세요.
@@ -99,28 +96,14 @@ int main() {
    
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
-            //int i = 2, j = 1;
+            int i = 2, j = 1;
             if(map[i][j] == 1) {
                 map[i][j] = 0;
             }
             else {
                 toBomb(i, j, map[i][j]);
             }
-            // for(int i = 0; i < n; i++) {
-            //     for(int j = 0; j < n; j++) {
-            //     cout << map[i][j] << ' ';
-            //     }
-            //     cout << '\n';
-            // }
-            // cout << "--------------------\n";
             gravity();
-            // for(int i = 0; i < n; i++) {
-            //     for(int j = 0; j < n; j++) {
-            //     cout << map[i][j] << ' ';
-            //     }
-            //     cout << '\n';
-            // }
-            // cout << "--------------------\n";
             int cnt = countPair();
             answer = max(answer, cnt);
             init();
