@@ -33,7 +33,7 @@ void findBomb(int y) {
         return;
     }
 
-    map[x][y] = 0;
+    //map[x][y] = 0;
     for(int d = 0; d < 4; d++) {
         for(int i = 0; i < cnt; i++) {
             int nx = x + dx[d] * i;
