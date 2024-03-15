@@ -96,7 +96,6 @@ int main() {
    
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
-            int i = 2, j = 1;
             if(map[i][j] == 1) {
                 map[i][j] = 0;
             }
