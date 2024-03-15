@@ -2,8 +2,8 @@
 
 using namespace std;
 int n, m, c;
-int map[202][202];
-int temp[202][202];
+int map[210][210];
+int temp[210][210];
 int dx[4] = {-1, 1, 0, 0};
 int dy[4] = {0, 0, -1, 1};
 
@@ -35,17 +35,24 @@ void findBomb(int y) {
 
     map[x][y] = 0;
     for(int d = 0; d < 4; d++) {
-        for(int i = 1; i < cnt; i++) {
+        for(int i = 0; i < cnt; i++) {
             int nx = x + dx[d] * i;
             int ny = y + dy[d] * i;
-
-            map[nx][ny] = 0;
+            if(InRange(nx, ny)) {
+                map[nx][ny] = 0;
+            }
         }    
     }
     return;
 }
 
 void gravity() {
+
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= n; j++) {
+            temp[i][j] = 0;
+        }
+    }
 
     for(int i = 1; i <= n; i++) {
         int last = n;
@@ -59,12 +66,6 @@ void gravity() {
     for(int i = 1; i <= n; i++) {
         for(int j = 1; j <= n; j++) {
             map[i][j] = temp[i][j];
-        }
-    }
-
-    for(int i = 1; i <= n; i++) {
-        for(int j = 1; j <= n; j++) {
-            temp[i][j] = 0;
         }
     }
 }
@@ -84,6 +85,7 @@ int main() {
 
         findBomb(c);
         gravity();
+
     }
     
     for(int i = 1; i <= n; i++) {
