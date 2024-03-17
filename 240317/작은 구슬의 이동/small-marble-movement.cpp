@@ -39,7 +39,7 @@ int main() {
         int ny = y + dy[dir];
 
         if (nx > n || ny > n || nx < 1 || ny < 1) {
-            dir = (dir + 1) % 4;
+            dir = (3 - dir) % 4;
             continue;
         }
         x = x + dx[dir];
