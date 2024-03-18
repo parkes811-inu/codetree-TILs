@@ -45,7 +45,7 @@ int main() {
 
         if (!InRange(nx, ny)) { // 격자 밖으로 나가면 탈출 성공
             cout << steps << endl;
-            break;
+            return 0;
         }
 
         if (map[nx][ny] == '.') {
