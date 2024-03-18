@@ -33,7 +33,8 @@ int main() {
     }
 
     int steps = 1;
-    for(int i = 0; i < n * n; i++) {
+    // for(int i = 0; i < n * n; i++) {
+    while(1) {
         // 오른쪽에 벽이 있는지 확인
         if (!HasWallToRight(x, y, dir)) {
             // 오른쪽에 벽이 없다면 시계 방향으로 90도 회전
