@@ -35,7 +35,8 @@ int main() {
     }
 
     int steps = 0;
-    while (true) {
+    // while (true) {
+    for(int i = 0; i < n * n; i++) {
         // 현재 위치에서 오른쪽에 벽이 있는지 검사
         if (!HasWallToRight(x, y, dir)) {
             // 오른쪽에 벽이 없다면 방향을 오른쪽으로 틀기
