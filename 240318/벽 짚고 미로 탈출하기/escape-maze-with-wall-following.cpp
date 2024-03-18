@@ -1,108 +1,64 @@
 #include <iostream>
-
 using namespace std;
+
 int n, x, y;
-// n * n 격자에서 
-// 우측 방향을 바라보고 시작하여
-// 오른쪽 벽을 짚고 쭉 따라가는 방식으로 미로를 탈출하는 프로그램
-// 규칙에 맞게 이동하다 격자 밖을 벗어났을 때 미로를 탈출한 것
 char map[102][102];
-int dir;
-int dx[4] = {0, 1, 0, -1};
+// 방향: 우, 상, 좌, 하 (시계 방향으로 회전하며, 우측 벽을 따라갑니다)
+int dx[4] = {0, -1, 0, 1}; 
 int dy[4] = {1, 0, -1, 0};
-int t;
+// 시작 방향은 우측을 바라보는 것으로 설정
+int dir = 0; 
 
-void print() {
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            cout << map[i][j] << ' ';
-        }
-        cout << '\n';
-    }
-}
-
+// 위치가 격자 내부에 있는지 확인하는 함수
 bool InRange(int x, int y) {
-    return (x >= 0 && y >= 0 && x < n && y < n);
+    return x >= 1 && x <= n && y >= 1 && y <= n;
 }
 
-bool findRight(int x, int y, int dir) {
+// 오른쪽에 벽이 있는지 검사하는 함수
+bool HasWallToRight(int x, int y, int dir) {
+    // 오른쪽 방향을 계산하기 위해 현재 방향에 대해 시계 방향으로 90도 회전
+    int rightDir = (dir + 3) % 4; 
+    int rightX = x + dx[rightDir];
+    int rightY = y + dy[rightDir];
 
-    if(dir == 0) {
-        if(map[x + 1][y]  == '#') {
-            return true;
-        }
-        return false;
-    }   
-    else if(dir == 1) {
-        if(map[x][y - 1]  == '#') {
-            return true;
-        }
-        return false;
-    }
-    else if(dir == 2) {
-        if(map[x - 1][y]  == '#') {
-            return true;
-        }
-        return false;
-    }
-    else {
-        if(map[x][y + 1]  == '#') {
-            return true;
-        }
-        return false;
-    }
-    return false;
+    // 오른쪽에 벽이 있다면 true를 반환
+    return !InRange(rightX, rightY) || map[rightX][rightY] == '#';
 }
 
 int main() {
-    // 여기에 코드를 작성해주세요.
-    cin >> n;
-    cin >> x >> y;
-    x--, y--;
+    cin >> n >> x >> y;
 
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= n; j++) {
             cin >> map[i][j];
         }
     }
 
-    // print();
-
-    for(int i = 0; i < n*n; i++)  {
-        int nx = x + dx[dir];
-        int ny = y + dy[dir];
-        bool right = findRight(nx, ny, dir);
-
-        if(!InRange(nx, ny)) {
-            // cout << nx << ' ' << ny << '\n';
-            cout << t + 1;
-            return 0;
-        }
-
-        if(InRange(nx, ny) && map[nx][ny] == '.') {
-        // if(InRange(nx, ny) && map[nx][ny] == '.' && right) {
-            if(right) {
-                x = nx;
-                y = ny;
-                map[x][y] = '9';
-                t++;
-            }
-            else {
-                x = nx;  
-                y = ny;
-                map[x][y] = '9';
-                t++;
-                dir = (dir + 1) % 4;
-                continue;
-            } 
-        }
-
-        if(map[nx][ny] == '#') {
+    int steps = 0;
+    while (true) {
+        // 현재 위치에서 오른쪽에 벽이 있는지 검사
+        if (!HasWallToRight(x, y, dir)) {
+            // 오른쪽에 벽이 없다면 방향을 오른쪽으로 틀기
             dir = (dir + 3) % 4;
         }
+        
+        // 다음 위치 계산
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
+
+        if (!InRange(nx, ny)) { // 격자 밖으로 나가면 탈출 성공
+            cout << steps + 1 << endl;
+            return 0;
+        }
+        
+        if (map[nx][ny] == '.') {
+            // 이동 가능하면 이동
+            x = nx;
+            y = ny;
+            steps++;
+        } else {
+            // 벽에 막히면 방향 전환 (반시계 방향으로 90도 회전)
+            dir = (dir + 1) % 4;
+        }
     }
-    // print();
-    //cout << x << ' ' << y << '\n';
-    cout << -1; 
-    return 0;
 }
