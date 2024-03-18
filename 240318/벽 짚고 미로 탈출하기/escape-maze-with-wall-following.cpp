@@ -62,4 +62,5 @@ int main() {
             dir = (dir + 1) % 4;
         }
     }
+    cout << -1;
 }
