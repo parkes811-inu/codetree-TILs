@@ -2,67 +2,34 @@
 using namespace std;
 
 int n;
-int map[101][101];
-int last;
-
-int answer;
-int x, y, dir;
-// Down, left, Up, Right
-int dx[4] = {1, 0, -1, 0};
+int map[102][102];
+int dx[4] = {1, 0, -1, 0}; // 아래, 왼쪽, 위, 오른쪽
 int dy[4] = {0, -1, 0, 1};
+
+// 방향 변화 정의
+// reflectDir[type][currentDir] => 반사판 타입과 현재 방향에 따른 새로운 방향
+int reflectDir[3][4] = {
+    {0, 0, 0, 0}, // 0은 반사판 없음, 방향 변화 없음
+    {1, 0, 3, 2}, // '/' 반사판에서의 방향 변화
+    {3, 2, 1, 0}  // '\' 반사판에서의 방향 변화
+};
 
 bool InRange(int x, int y) {
     return (x >= 0 && y >= 0 && x < n && y < n);
 }
 
-void findDir(int start) {
-    if(start / n == 0) {
-        dir = 0;
-        x = 0;
-        y = start % n;
-    }
-    else if(start / n == 1) {
-        dir = 1;
-        x = start % n;
-        y = n - 1;
-    }
-    else if(start / n == 2) {
-        dir = 2;
-        x = n - 1;
-        y = start % n;
-    }
-    else {
-        dir = 3;
-        x = start % n;
-        y = 0;
-    }
-}
-
-int moveMarble(int start) {
-    findDir(start); // 초기 위치와 방향 설정
-    int cnt = 1; // 격자 안에서 움직인 시간(거리)
-
+int moveMarble(int x, int y, int dir) {
+    int cnt = 0;
+    
     while(true) {
         x += dx[dir];
         y += dy[dir];
         cnt++; // 구슬을 움직임
-
-        // 격자 밖으로 나가는 경우 게임 종료
-        if (!InRange(x, y)) return cnt;
-
-        // 반사판에 부딪힌 경우 방향 변경
-        if (map[x][y] == 1) {
-            // `/` 모양 반사판
-            if (dir == 0) dir = 1; // 아래 -> 왼쪽
-            else if (dir == 1) dir = 0; // 왼쪽 -> 아래
-            else if (dir == 2) dir = 3; // 위 -> 오른쪽
-            else if (dir == 3) dir = 2; // 오른쪽 -> 위
-        } else if (map[x][y] == 2) {
-            // `\` 모양 반사판
-            if (dir == 0) dir = 3; // 아래 -> 오른쪽
-            else if (dir == 3) dir = 0; // 오른쪽 -> 아래
-            else if (dir == 1) dir = 2; // 왼쪽 -> 위
-            else if (dir == 2) dir = 1; // 위 -> 왼쪽
+        
+        if (!InRange(x, y)) break; // 격자 밖으로 나가는 경우 게임 종료
+        
+        if (map[x][y] > 0) { // 반사판에 부딪힌 경우
+            dir = reflectDir[map[x][y]][dir]; // 방향 변경
         }
     }
 
@@ -70,33 +37,23 @@ int moveMarble(int start) {
 }
 
 int main() {
-    // 여기에 코드를 작성해주세요.
-    ios::sync_with_stdio(0);
-    
     cin >> n;
-    cin.tie();
-    cout.tie();
-
-    last = 4 * n;
-
+    
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
             cin >> map[i][j];
         }
     }
-
-    for(int i = 0; i < last; i++) {
-        int cnt = moveMarble(i);
-        answer = max(cnt, answer);
+    
+    int answer = 0;
+    // 격자의 모든 가능한 시작점에서 구슬을 이동
+    for(int i = 0; i < 4 * n; i++) {
+        // 여기에 시작점을 결정하는 로직을 추가
+        int cnt = moveMarble(시작 x, 시작 y, 시작 방향);
+        answer = max(answer, cnt);
     }
-
-    cout << answer;
-
-    // for(int i = 0; i < n; i++) {
-    //     for(int j = 0; j < n; j++) {
-    //         cout << map[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
+    
+    cout << answer << endl;
+    
     return 0;
 }
