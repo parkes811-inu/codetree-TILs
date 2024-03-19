@@ -42,7 +42,8 @@ int moveMarble(int start) {
     findDir(start); // 초기 위치와 방향 설정
     int cnt = 1; // 격자 안에서 움직인 시간(거리)
 
-    while(true) {
+    // while(true) {
+    for(int i = 0; i < n * n; i++) {
         x += dx[dir];
         y += dy[dir];
         cnt++; // 구슬을 움직임
