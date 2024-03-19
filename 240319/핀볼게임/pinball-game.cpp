@@ -2,7 +2,7 @@
 using namespace std;
 
 int n;
-int map[102][102];
+int map[101][101];
 int last;
 
 int answer;
@@ -81,7 +81,6 @@ int main() {
     }
 
     for(int i = 0; i < last; i++) {
-
         int cnt = moveMarble(i);
         answer = max(cnt, answer);
     }
