@@ -48,7 +48,7 @@ int moveMarble(int start) {
         y += dy[dir];
         cnt++; // 구슬을 움직임
         
-        if(cnt > 1000) {
+        if(cnt > 1000000) {
             return -1;
         }
         // 격자 밖으로 나가는 경우 게임 종료
