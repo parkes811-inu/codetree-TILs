@@ -45,7 +45,8 @@ int moveMarble(int start) {
     while(true) {
         int nx = x + dx[dir];
         int ny = y + dy[dir];
-
+        cnt++;
+        
         if (!InRange(nx, ny)) break; // 격자 밖으로 나가면 종료
 
         if (map[nx][ny] == 1) { // '/' 반사판
@@ -56,7 +57,7 @@ int moveMarble(int start) {
 
         x = nx;
         y = ny;
-        cnt++;
+
     }
 
     return cnt;
