@@ -14,7 +14,7 @@ int simulate(int x, int y, int dir) {
         x += dx[dir];
         y += dy[dir];
         time++;
-        if (x < 0 || x >= n || y < 0 || y >= n) break; // 격자 밖으로 나가는 경우
+        if (x < 0 || x >= n || y < 0 || y >= n) return time; // 격자 밖으로 나가는 경우
         if (map[x][y] == 1) { // / 모양
             if (dir == 0) dir = 3;
             else if (dir == 1) dir = 2;
