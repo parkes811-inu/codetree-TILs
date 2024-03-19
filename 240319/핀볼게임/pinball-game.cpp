@@ -65,8 +65,8 @@ int moveMarble(int start) {
         } else if (map[x][y] == 2) {
             // `\` 모양 반사판
             if (dir == 0) dir = 3; // 아래 -> 오른쪽
-            else if (dir == 3) dir = 2; // 오른쪽 -> 위//아래
-            else if (dir == 1) dir = 0; // 왼쪽 -> 아래//위
+            else if (dir == 3) dir = 0; // 오른쪽 -> 위//아래
+            else if (dir == 1) dir = 2; // 왼쪽 -> 아래//위
             else if (dir == 2) dir = 1; // 위 -> 왼쪽
         }
     }
