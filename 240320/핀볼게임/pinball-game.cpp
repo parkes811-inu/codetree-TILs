@@ -43,8 +43,8 @@ int main() {
     // 4 * n 개의 가능한 시작점에 대해 시뮬레이션을 진행합니다.
     for (int i = 0; i < n; ++i) {
         maxTime = max(maxTime, simulate(-1, i, 0)); // 상단에서 남쪽으로 진입
-        maxTime = max(maxTime, simulate(i, n - 1, 1)); // 하단에서 북쪽으로 진입
-        maxTime = max(maxTime, simulate(n - 1, i, 2)); // 좌측에서 동쪽으로 진입
+        maxTime = max(maxTime, simulate(i, n, 1)); // 하단에서 북쪽으로 진입
+        maxTime = max(maxTime, simulate(n, i, 2)); // 좌측에서 동쪽으로 진입
         maxTime = max(maxTime, simulate(i, -1, 3)); // 우측에서 서쪽으로 진입
     }
 
