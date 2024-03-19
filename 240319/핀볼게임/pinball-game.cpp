@@ -2,7 +2,7 @@
 using namespace std;
 
 int n;
-int map[101][101];
+int map[100][100];
 int last;
 
 int answer;
@@ -74,7 +74,7 @@ int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-    
+
     cin >> n;
     last = 4 * n;
 
