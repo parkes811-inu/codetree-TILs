@@ -18,29 +18,29 @@ bool InRange(int x, int y) {
 void findDir(int start) {
     if(start / n == 0) {
         dir = 0;
-        x = 0;
+        x = -1;
         y = start % n;
     }
     else if(start / n == 1) {
         dir = 1;
         x = start % n;
-        y = n - 1;
+        y = n;
     }
     else if(start / n == 2) {
         dir = 2;
-        x = n - 1;
+        x = n;
         y = start % n;
     }
     else {
         dir = 3;
         x = start % n;
-        y = 0;
+        y = -1;
     }
 }
 
 int moveMarble(int start) {
     findDir(start); // 초기 위치와 방향 설정
-    int cnt = 1; // 격자 안에서 움직인 시간(거리)
+    int cnt = 0; // 격자 안에서 움직인 시간(거리)
 
     while(true) {
         x += dx[dir];
@@ -82,7 +82,7 @@ int main() {
 
     for(int i = 0; i < last; i++) {
 
-        int cnt = moveMarble(i - 1);
+        int cnt = moveMarble(i);
         answer = max(cnt, answer);
     }
 
