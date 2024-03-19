@@ -12,7 +12,7 @@ int dy[4] = {0, -1, 0, 1};
 
 // 격자 내에서 구슬의 이동을 시뮬레이션하는 함수
 int simulate(int x, int y, int dir) {
-    int time = 1;
+    int time = 0;
     while (true) {
         x += dx[dir];
         y += dy[dir];
@@ -42,10 +42,10 @@ int main() {
     int maxTime = 0;
     // 4 * n 개의 가능한 시작점에 대해 시뮬레이션을 진행합니다.
     for (int i = 0; i < n; ++i) {
-        maxTime = max(maxTime, simulate(0, i, 0)); // 상단에서 남쪽으로 진입
+        maxTime = max(maxTime, simulate(-1, i, 0)); // 상단에서 남쪽으로 진입
         maxTime = max(maxTime, simulate(i, n - 1, 1)); // 하단에서 북쪽으로 진입
         maxTime = max(maxTime, simulate(n - 1, i, 2)); // 좌측에서 동쪽으로 진입
-        maxTime = max(maxTime, simulate(i, 0, 3)); // 우측에서 서쪽으로 진입
+        maxTime = max(maxTime, simulate(i, -1, 3)); // 우측에서 서쪽으로 진입
     }
 
     cout << maxTime << endl;
