@@ -1,97 +1,69 @@
 #include <iostream>
+#include <vector>
+#include <algorithm> // max 함수를 사용하기 위해 포함
+
 using namespace std;
 
 int n;
-int map[101][101];
-int last;
+vector<vector<int>> arr;
+int dx[4] = {-1, 1, 0, 0}; // 상, 하, 좌, 우
+int dy[4] = {0, 0, -1, 1};
+int maxTime = 0;
 
-int answer;
-int x, y, dir;
-// Down, left, Up, Right
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, -1, 0, 1};
+int simulate(int direction, int x, int y) {
+    int time = 0;
 
-bool InRange(int x, int y) {
-    return (x >= 0 && y >= 0 && x < n && y < n);
-}
+    while (true) {
+        time++;
+        int nx = x + dx[direction];
+        int ny = y + dy[direction];
 
-void findDir(int start) {
-    if(start / n == 0) {
-        dir = 0;
-        x = 0;
-        y = start % n;
-    }
-    else if(start / n == 1) {
-        dir = 1;
-        x = start % n;
-        y = n - 1;
-    }
-    else if(start / n == 2) {
-        dir = 2;
-        x = n - 1;
-        y = start % n;
-    }
-    else {
-        dir = 3;
-        x = start % n;
-        y = 0;
-    }
-}
-
-int moveMarble(int start) {
-    findDir(start);
-    int cnt = 1;
-
-    while(true) {
-        int nx = x + dx[dir];
-        int ny = y + dy[dir];
-        cnt++;
-        
-        if (!InRange(nx, ny)) break; // 격자 밖으로 나가면 종료
-
-        if (map[nx][ny] == 1) { // '/' 반사판
-            dir = (dir == 0) ? 3 : (dir == 1) ? 2 : (dir == 2) ? 1 : 0;
-        } else if (map[nx][ny] == 2) { // '\' 반사판
-            dir = (dir == 0) ? 1 : (dir == 1) ? 0 : (dir == 2) ? 3 : 2;
+        // 격자를 벗어나는 경우 루프 종료
+        if (nx < 0 || nx >= n || ny < 0 || ny >= n) {
+            break;
         }
 
+        // 방향 전환 로직
+        if (arr[nx][ny] == 1) {
+            // 반사판 1에서의 방향 변경
+            if (direction == 0) direction = 3;
+            else if (direction == 1) direction = 2;
+            else if (direction == 2) direction = 1;
+            else if (direction == 3) direction = 0;
+        } else if (arr[nx][ny] == 2) {
+            // 반사판 2에서의 방향 변경
+            if (direction == 0) direction = 1;
+            else if (direction == 1) direction = 0;
+            else if (direction == 2) direction = 3;
+            else if (direction == 3) direction = 2;
+        }
+
+        // 다음 위치로 이동
         x = nx;
         y = ny;
-
     }
 
-    return cnt;
+    return time;
 }
 
-
 int main() {
-    // 여기에 코드를 작성해주세요.
-    ios::sync_with_stdio(0);
-    
     cin >> n;
-    cin.tie();
-    cout.tie();
+    arr.resize(n, vector<int>(n));
 
-    last = 4 * n;
-
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            cin >> map[i][j];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> arr[i][j];
         }
     }
 
-    for(int i = 0; i < last; i++) {
-        int cnt = moveMarble(i);
-        answer = max(cnt, answer);
+    for (int idx = 0; idx < n; idx++) {
+        maxTime = max(maxTime, simulate(1, idx, -1)); // 상 -> 하
+        maxTime = max(maxTime, simulate(3, idx, n)); // 하 -> 상
+        maxTime = max(maxTime, simulate(2, -1, idx)); // 좌 -> 우
+        maxTime = max(maxTime, simulate(0, n, idx)); // 우 -> 좌
     }
 
-    cout << answer;
+    cout << maxTime << endl;
 
-    // for(int i = 0; i < n; i++) {
-    //     for(int j = 0; j < n; j++) {
-    //         cout << map[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
     return 0;
 }
