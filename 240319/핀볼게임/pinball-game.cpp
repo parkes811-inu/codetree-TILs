@@ -1,56 +1,107 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
 int n;
-vector<vector<int>> board;
-int dx[4] = {0, 1, 0, -1}; // 오른쪽, 아래, 왼쪽, 위
-int dy[4] = {1, 0, -1, 0};
-// 반사판에서의 방향 변경
-// reflectDir[반사판 타입][현재 방향] = 새로운 방향
-int reflectDir[3][4] = {
-    {0, 0, 0, 0}, // 0: 빈 공간, 방향 변경 없음
-    {3, 2, 1, 0}, // 1: / 모양 반사판
-    {1, 0, 3, 2}  // 2: \ 모양 반사판
-};
+int map[101][101];
+int last;
 
-bool inRange(int x, int y) {
-    return x >= 0 && x < n && y >= 0 && y < n;
+int answer;
+int x, y, dir;
+// Down, left, Up, Right
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, -1, 0, 1};
+
+bool InRange(int x, int y) {
+    return (x >= 0 && y >= 0 && x < n && y < n);
 }
 
-int simulate(int x, int y, int dir) {
-    int cnt = 0;
-    while (true) {
+void findDir(int start) {
+    if(start / n == 0) {
+        dir = 0;
+        x = 0;
+        y = start % n;
+    }
+    else if(start / n == 1) {
+        dir = 1;
+        x = start % n;
+        y = n - 1;
+    }
+    else if(start / n == 2) {
+        dir = 2;
+        x = n - 1;
+        y = start % n;
+    }
+    else {
+        dir = 3;
+        x = start % n;
+        y = 0;
+    }
+}
+
+int moveMarble(int start) {
+    findDir(start); // 초기 위치와 방향 설정
+    int cnt = 1; // 격자 안에서 움직인 시간(거리)
+
+    while(true) {
+        //for(int i = 0; i <= n * n * n * n; i++) {
         x += dx[dir];
         y += dy[dir];
-        cnt++;
-        if (!inRange(x, y)) break; // 격자 밖으로 나가면 종료
-        if (board[x][y] != 0) { // 반사판을 만나면 방향 변경
-            dir = reflectDir[board[x][y]][dir];
+        cnt++; // 구슬을 움직임
+        
+        if(cnt > 1000) {
+            return -1;
+        }
+        // 격자 밖으로 나가는 경우 게임 종료
+        if (!InRange(x, y)) return cnt;
+
+        // 반사판에 부딪힌 경우 방향 변경
+        // Down, left, Up, Right
+        if (map[x][y] == 1) {
+            // `/` 모양 반사판
+            if (dir == 0) dir = 1; // 아래 -> 왼쪽
+            else if (dir == 1) dir = 0; // 왼쪽 -> 아래
+            else if (dir == 2) dir = 3; // 위 -> 오른쪽
+            else if (dir == 3) dir = 2; // 오른쪽 -> 위
+        } else if (map[x][y] == 2) {
+            // `\` 모양 반사판
+            if (dir == 0) dir = 3; // 아래 -> 오른쪽
+            else if (dir == 3) dir = 2; // 오른쪽 -> 위//아래
+            else if (dir == 1) dir = 0; // 왼쪽 -> 아래//위
+            else if (dir == 2) dir = 1; // 위 -> 왼쪽
         }
     }
-    return cnt;
+
+    return cnt; // 격자 밖으로 나가기까지 걸린 시간 반환
 }
 
 int main() {
+    // 여기에 코드를 작성해주세요.
+    ios::sync_with_stdio(0);
+    
     cin >> n;
-    board.resize(n, vector<int>(n));
+    cin.tie();
+    cout.tie();
 
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            cin >> board[i][j];
+    last = 4 * n;
+
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            cin >> map[i][j];
         }
     }
 
-    int maxTime = 0;
-    // 모든 가능한 시작점에서 시뮬레이션
-    for (int i = 0; i < 4 * n; ++i) {
-        int x = i < n ? 0 : i < 2 * n ? i - n : n - 1; // x 좌표 결정
-        int y = i < n ? i : i < 2 * n ? n - 1 : 3 * n - i - 1; // y 좌표 결정
-        int dir = i < n ? 1 : i < 2 * n ? 2 : 3; // 방향 결정
-        maxTime = max(maxTime, simulate(x, y, dir));
+    for(int i = 0; i < last; i++) {
+        int cnt = moveMarble(i);
+        answer = max(cnt, answer);
     }
 
-    cout << maxTime + 1 << endl;
+    cout << answer;
+
+    // for(int i = 0; i < n; i++) {
+    //     for(int j = 0; j < n; j++) {
+    //         cout << map[i][j] << ' ';
+    //     }
+    //     cout << '\n';
+    // }
     return 0;
 }
