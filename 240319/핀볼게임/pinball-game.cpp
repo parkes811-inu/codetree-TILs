@@ -39,40 +39,29 @@ void findDir(int start) {
 }
 
 int moveMarble(int start) {
-    findDir(start); // 초기 위치와 방향 설정
-    int cnt = 1; // 격자 안에서 움직인 시간(거리)
+    findDir(start);
+    int cnt = 1;
 
     while(true) {
-        //for(int i = 0; i <= n * n * n * n; i++) {
-        x += dx[dir];
-        y += dy[dir];
-        cnt++; // 구슬을 움직임
-        
-        if(cnt > 20000000) {
-            return -1;
-        }
-        // 격자 밖으로 나가는 경우 게임 종료
-        if (!InRange(x, y)) return cnt;
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
 
-        // 반사판에 부딪힌 경우 방향 변경
-        // Down, left, Up, Right
-        if (map[x][y] == 1) {
-            // `/` 모양 반사판
-            if (dir == 0) dir = 1; // 아래 -> 왼쪽
-            else if (dir == 1) dir = 0; // 왼쪽 -> 아래
-            else if (dir == 2) dir = 3; // 위 -> 오른쪽
-            else if (dir == 3) dir = 2; // 오른쪽 -> 위
-        } else if (map[x][y] == 2) {
-            // `\` 모양 반사판
-            if (dir == 0) dir = 3; // 아래 -> 오른쪽
-            else if (dir == 3) dir = 0; // 오른쪽 -> 위//아래
-            else if (dir == 1) dir = 2; // 왼쪽 -> 아래//위
-            else if (dir == 2) dir = 1; // 위 -> 왼쪽
+        if (!InRange(nx, ny)) break; // 격자 밖으로 나가면 종료
+
+        if (map[nx][ny] == 1) { // '/' 반사판
+            dir = (dir == 0) ? 3 : (dir == 1) ? 2 : (dir == 2) ? 1 : 0;
+        } else if (map[nx][ny] == 2) { // '\' 반사판
+            dir = (dir == 0) ? 1 : (dir == 1) ? 0 : (dir == 2) ? 3 : 2;
         }
+
+        x = nx;
+        y = ny;
+        cnt++;
     }
 
-    return cnt; // 격자 밖으로 나가기까지 걸린 시간 반환
+    return cnt;
 }
+
 
 int main() {
     // 여기에 코드를 작성해주세요.
