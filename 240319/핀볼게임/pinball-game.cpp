@@ -48,7 +48,7 @@ int moveMarble(int start) {
         cnt++; // 구슬을 움직임
 
         // 격자 밖으로 나가는 경우 게임 종료
-        if (!InRange(x, y)) break;
+        if (!InRange(x, y)) return cnt;
 
         // 반사판에 부딪힌 경우 방향 변경
         if (map[x][y] == 1) {
