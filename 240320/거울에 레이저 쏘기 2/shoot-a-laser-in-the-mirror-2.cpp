@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 int n, k;
@@ -19,7 +20,7 @@ void print() {
 
 int findDir(int k) {
     
-    for(int i = 0; i < 4 * n; i++) {
+    for(int i = 1; i <= 4 * n; i++) {
         if(i / 4 == 0) {
             // cout << "i / 4 = 0 : " << i % 4 << ' ';
             x = -1;
@@ -63,10 +64,11 @@ int main() {
     // print();
 
     dir = findDir(k);
-    
+    vector<pair<int, int>> cur;
     while(1) {
         x = x + dx[dir];
         y = y + dy[dir];
+        cur.push_back({x, y});
         answer++;
 
         if(x < 0 || y < 0 || x >= n || y >= n) {
@@ -89,8 +91,13 @@ int main() {
             else 
                 dir = 2;
         }
-
     }
-    cout << answer + 1;
+    // print();
+
+    // for(int i = 0; i < cur.size(); i++) {
+     
+    //     cout << cur[i].first << ' ' << cur[i].second << '\n';
+    // }
+    cout << answer-1;
     return 0;
 }
