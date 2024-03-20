@@ -20,35 +20,32 @@ void print() {
 
 int findDir(int k) {
     
-    for(int i = 1; i <= 4 * n; i++) {
-        if(i / 4 == 0) {
-            // cout << "i / 4 = 0 : " << i % 4 << ' ';
-            x = -1;
-            y = i % 4;
-            return 0;
-        }
-        else if(i / 4 == 1) {
-            // cout << "i / 4 = 1 : " << i % 4 << ' ';
-            x = i % 4;
-            y = n;
-            return 1;
-        }
-        else if(i / 4 == 2) {
-            // cout << "i / 4 = 2 : " << i % 4 << ' ';
-            x = n;
-            y = i % 4;
-            return 2;
-        }
-        else {
-            // cout << "i / 4 = 3 : " << i % 4 << ' ';
-            x = i % 4;
-            y = -1;
-            return 3;
-        }
-
-        // cout << '\n';
+    if(k < 4) {
+        // cout << "i / 4 = 0 : " << i % 4 << ' ';
+        x = -1;
+        y = k % 4;
+        return 0;
     }
-    return -1;
+    else if(k < 4 * 2) {
+        // cout << "i / 4 = 1 : " << i % 4 << ' ';
+        x = k % 4;
+        y = n;
+        return 1;
+    }
+    else if(k < 4 * 3) {
+        // cout << "i / 4 = 2 : " << i % 4 << ' ';
+        x = n;
+        y = k % 4;
+        return 2;
+    }
+    else {
+        // cout << "i / 4 = 3 : " << i % 4 << ' ';
+        x = k % 4;
+        y = -1;
+        return 3;
+    }
+
+    // cout << '\n';
 }
 int main() {
     // 여기에 코드를 작성해주세요.
@@ -60,8 +57,6 @@ int main() {
     }
     cin >> k;
     k--;
-
-    // print();
 
     dir = findDir(k);
     vector<pair<int, int>> cur;
