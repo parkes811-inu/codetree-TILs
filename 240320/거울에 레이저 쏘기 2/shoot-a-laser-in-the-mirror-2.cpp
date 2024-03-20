@@ -23,16 +23,16 @@ int findDir(int k) {
     if(k < 4) {
         // cout << "i / 4 = 0 : " << i % 4 << ' ';
         x = -1;
-        y = k % 4;
+        y = k;
         return 0;
     }
-    else if(k < 4 * 2) {
+    else if(k < 2 * n) {
         // cout << "i / 4 = 1 : " << i % 4 << ' ';
         x = k % 4;
         y = n;
         return 1;
     }
-    else if(k < 4 * 3) {
+    else if(k < 3 * n) {
         // cout << "i / 4 = 2 : " << i % 4 << ' ';
         x = n;
         y = k % 4;
