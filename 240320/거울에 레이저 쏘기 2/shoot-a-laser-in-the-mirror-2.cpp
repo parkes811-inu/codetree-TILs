@@ -21,19 +21,19 @@ void print() {
 
 int findDir(int k) {
     
-    if(k < 4) {
+    if(k <= n) {
         // cout << "i / 4 = 0 : " << i % 4 << ' ';
         x = -1;
         y = k;
         return 0;
     }
-    else if(k < 2 * n) {
+    else if(k <= 2 * n) {
         // cout << "i / 4 = 1 : " << i % 4 << ' ';
         x = k % 4;
         y = n;
         return 1;
     }
-    else if(k < 3 * n) {
+    else if(k <= 3 * n) {
         // cout << "i / 4 = 2 : " << i % 4 << ' ';
         x = n;
         y = k % 4;
@@ -68,11 +68,10 @@ int main() {
         if(x < 0 || y < 0 || x >= n || y >= n) {
             break;
         }
-        
+        answer++;
         cur.push_back({x, y});
 
         if(map[x][y] == '\\') {
-            answer++;
             if(dir == 0) dir = 3;
             else if(dir == 1) dir = 2;
             else if(dir ==2) dir = 1;
@@ -80,7 +79,6 @@ int main() {
                 dir = 0;
         }
         else if(map[x][y] == '/') {
-            answer++;
             if(dir == 0) dir = 1;
             else if(dir == 1) dir = 0;
             else if(dir ==2) dir = 3;
