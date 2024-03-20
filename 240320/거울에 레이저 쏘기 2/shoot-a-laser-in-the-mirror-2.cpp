@@ -1,97 +1,79 @@
 #include <iostream>
-#include <vector>
+
+#define MAX_N 1000
+#define DIR_NUM 4
 
 using namespace std;
-int n, k;
-int dir, x, y;
-char map[1002][1002];
-int answer;
-// 시계 방향
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, -1, 0, 1};
 
-void print() {
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            cout << map[i][j] << ' ';
-        }
-        cout << '\n';
-    }
-}
+int n;
+char arr[MAX_N][MAX_N];
 
-int findDir(int k) {
-    
-    if(k <= n) {
-        // cout << "i / 4 = 0 : " << i % 4 << ' ';
-        x = -1;
-        y = k;
-        return 0;
+int start_num;
+int x, y, move_dir;
+
+// 주어진 숫자에 따라
+// 시작 위치와 방향을 구합니다.
+void Initialize(int num) {
+    if(num <= n) {
+        x = 0; y = num - 1; move_dir = 0;
     }
-    else if(k <= 2 * n) {
-        // cout << "i / 4 = 1 : " << i % 4 << ' ';
-        x = k % 4;
-        y = n;
-        return 1;
+    else if(num <= 2 * n) {
+        x = num - n - 1; y = n - 1; move_dir = 1;
     }
-    else if(k <= 3 * n) {
-        // cout << "i / 4 = 2 : " << i % 4 << ' ';
-        x = n;
-        y = k % 4;
-        return 2;
+    else if(num <= 3 * n) {
+        x = n - 1; y = n - (num - 2 * n); move_dir = 2;
     }
     else {
-        // cout << "i / 4 = 3 : " << i % 4 << ' ';
-        x = k % 4;
-        y = -1;
-        return 3;
+        x = n - (num - 3 * n); y = 0; move_dir = 3;
     }
-
-    // cout << '\n';
 }
+
+bool InRange(int x, int y) {
+    return 0 <= x && x < n && 0 <= y && y < n;
+}
+
+// (x, y)에서 시작하여 next_dir 방향으로
+// 이동한 이후의 위치를 구합니다.
+void Move(int next_dir) {
+    int dx[DIR_NUM] = {1,  0, -1, 0};
+    int dy[DIR_NUM] = {0, -1,  0, 1};
+    
+    x += dx[next_dir];
+    y += dy[next_dir];
+    move_dir = next_dir;
+}
+
+int Simulate() {
+    int move_num = 0;
+    while(InRange(x, y)) {
+        // 0 <-> 1 / 2 <-> 3
+        if(arr[x][y] == '/')
+            Move(move_dir ^ 1);
+        // 0 <-> 3 / 1 <-> 2
+        else
+            Move(3 - move_dir);
+        
+        move_num += 1;
+    }
+    
+    return move_num;
+}
+
 int main() {
-    // 여기에 코드를 작성해주세요.
-    cin >> n;    
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            cin >> map[i][j];
-        }
-    }
-    cin >> k;
-    k--;
-
-    dir = findDir(k);
-    vector<pair<int, int>> cur;
-    while(1) {
-        x = x + dx[dir];
-        y = y + dy[dir];
-
-        if(x < 0 || y < 0 || x >= n || y >= n) {
-            break;
-        }
-        answer++;
-        cur.push_back({x, y});
-
-        if(map[x][y] == '\\') {
-            if(dir == 0) dir = 3;
-            else if(dir == 1) dir = 2;
-            else if(dir ==2) dir = 1;
-            else 
-                dir = 0;
-        }
-        else if(map[x][y] == '/') {
-            if(dir == 0) dir = 1;
-            else if(dir == 1) dir = 0;
-            else if(dir ==2) dir = 3;
-            else 
-                dir = 2;
-        }
-    }
-    // print();
-
-    // for(int i = 0; i < cur.size(); i++) {
-     
-    //     cout << cur[i].first << ' ' << cur[i].second << '\n';
-    // }
-    cout << answer;
+    // 입력
+    cin >> n;
+    for(int i = 0; i < n; i++)
+        for(int j = 0; j < n; j++)
+            cin >> arr[i][j];
+    
+    cin >> start_num;
+ 
+    // 시작 위치와 방향을 구합니다.
+    Initialize(start_num);
+    // (x, y)에서 move_dir 방향으로 시작하여
+    // 시뮬레이션을 진행합니다.
+    int move_num = Simulate();
+    
+    cout << move_num;
     return 0;
 }
