@@ -9,6 +9,7 @@ int answer;
 // 시계 방향
 int dx[4] = {1, 0, -1, 0};
 int dy[4] = {0, -1, 0, 1};
+
 void print() {
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
@@ -63,12 +64,15 @@ int main() {
     while(1) {
         x = x + dx[dir];
         y = y + dy[dir];
-        cur.push_back({x, y});
-        answer++;
 
         if(x < 0 || y < 0 || x >= n || y >= n) {
             break;
         }
+
+        cur.push_back({x, y});
+        answer++;
+
+
 
         if(map[x][y] == '\\') {
 
@@ -93,6 +97,6 @@ int main() {
      
     //     cout << cur[i].first << ' ' << cur[i].second << '\n';
     // }
-    cout << answer-1;
+    cout << answer;
     return 0;
 }
