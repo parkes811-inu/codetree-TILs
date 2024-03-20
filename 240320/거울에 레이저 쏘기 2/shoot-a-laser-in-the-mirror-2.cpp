@@ -9,7 +9,6 @@ int answer;
 // 시계 방향
 int dx[4] = {1, 0, -1, 0};
 int dy[4] = {0, -1, 0, 1};
-
 void print() {
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
@@ -21,32 +20,35 @@ void print() {
 
 int findDir(int k) {
     
-    if(k < 4) {
-        // cout << "i / 4 = 0 : " << i % 4 << ' ';
-        x = -1;
-        y = k;
-        return 0;
-    }
-    else if(k < 2 * n) {
-        // cout << "i / 4 = 1 : " << i % 4 << ' ';
-        x = k % 4;
-        y = n;
-        return 1;
-    }
-    else if(k < 3 * n) {
-        // cout << "i / 4 = 2 : " << i % 4 << ' ';
-        x = n;
-        y = k % 4;
-        return 2;
-    }
-    else {
-        // cout << "i / 4 = 3 : " << i % 4 << ' ';
-        x = k % 4;
-        y = -1;
-        return 3;
-    }
+    for(int i = 1; i <= 4 * n; i++) {
+        if(i / 4 == 0) {
+            // cout << "i / 4 = 0 : " << i % 4 << ' ';
+            x = -1;
+            y = i % 4;
+            return 0;
+        }
+        else if(i / 4 == 1) {
+            // cout << "i / 4 = 1 : " << i % 4 << ' ';
+            x = i % 4;
+            y = n;
+            return 1;
+        }
+        else if(i / 4 == 2) {
+            // cout << "i / 4 = 2 : " << i % 4 << ' ';
+            x = n;
+            y = i % 4;
+            return 2;
+        }
+        else {
+            // cout << "i / 4 = 3 : " << i % 4 << ' ';
+            x = i % 4;
+            y = -1;
+            return 3;
+        }
 
-    // cout << '\n';
+        // cout << '\n';
+    }
+    return -1;
 }
 int main() {
     // 여기에 코드를 작성해주세요.
@@ -59,21 +61,21 @@ int main() {
     cin >> k;
     k--;
 
+    // print();
+
     dir = findDir(k);
     vector<pair<int, int>> cur;
     while(1) {
         x = x + dx[dir];
         y = y + dy[dir];
 
+
         if(x < 0 || y < 0 || x >= n || y >= n) {
             break;
         }
-
         cur.push_back({x, y});
         answer++;
-
-
-
+        
         if(map[x][y] == '\\') {
 
             if(dir == 0) dir = 3;
