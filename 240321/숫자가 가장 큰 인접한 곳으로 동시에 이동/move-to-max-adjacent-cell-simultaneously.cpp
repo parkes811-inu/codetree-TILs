@@ -6,7 +6,7 @@ int n, m, t;
 vector<pair<int, int>> marble;
 
 int map[22][22];
-int count[22][22];
+
 int nextCount[22][22];
 int answer;
 // 상하좌우 순서
@@ -36,7 +36,12 @@ bool InRange(int x, int y) {
 }
 
 void moveMarble() {
-
+    int count[22][22];
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            count[i][j] = 0;
+        }
+    } 
     for(int i = 0; i < marble.size(); i++) {
         int x = marble[i].first, y = marble[i].second;
         int max_val = -1;
