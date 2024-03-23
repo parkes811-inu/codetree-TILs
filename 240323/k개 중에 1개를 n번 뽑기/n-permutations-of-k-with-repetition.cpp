@@ -19,13 +19,13 @@ void choose(int num) {
     for(int i = 1; i <= k; i++) {
         answer.push_back(i);
         choose(num + 1);
-        answer.pop_back();
+        //answer.pop_back();
     }
    return;
 }
 int main() {
     // 여기에 코드를 작성해주세요.
-    cin >> n >> k;
+    cin >> k >> n;
     choose(1);
     return 0;
 }
