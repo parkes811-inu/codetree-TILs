@@ -90,7 +90,7 @@ int main() {
         }
 
         // 충분한 시간 동안 구슬 이동 시도
-        for (int time = 0; time < 2*n -1; time++) {
+        for (int time = 0; time < 2*n -2; time++) {
             MoveAndDetectCollisions();
         }
 
