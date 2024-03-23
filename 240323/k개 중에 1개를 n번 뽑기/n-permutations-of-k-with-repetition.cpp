@@ -19,7 +19,7 @@ void choose(int num) {
     for(int i = 1; i <= k; i++) {
         answer.push_back(i);
         choose(num + 1);
-        //answer.pop_back();
+        answer.pop_back();
     }
    return;
 }
