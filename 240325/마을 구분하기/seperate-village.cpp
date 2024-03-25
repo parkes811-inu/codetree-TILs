@@ -18,8 +18,8 @@ bool InRange(int x, int y) {
 }
 
 int dfs(int x, int y) {
-    visited[x][y] = true;
-    cnt++;
+    //isited[x][y] = true;
+    //cnt++;
 
     for(int i = 0; i < 4; i++) {
         int nx = x + dx[i];
@@ -61,7 +61,7 @@ int main() {
     sort(answer.begin(), answer.end());
 
     for(int i = 0; i < answer.size(); i++) {
-        cout << answer[i] / 2 << '\n';
+        cout << answer[i] << '\n';
     }
 
     return 0;
