@@ -5,6 +5,7 @@
 using namespace std;
 int n;
 vector<int> answer;
+int cnt;
 
 int map[26][26];
 bool visited[26][26] = {false, };
@@ -17,7 +18,6 @@ bool InRange(int x, int y) {
 }
 
 int dfs(int x, int y) {
-    int cnt = 1;
     visited[x][y] = true;
     cnt++;
 
@@ -28,11 +28,8 @@ int dfs(int x, int y) {
         if(InRange(nx, ny) && map[nx][ny] == 1 &&
         !visited[nx][ny]) {
             visited[nx][ny] = true;
-            
-            cnt = cnt + dfs(nx, ny);
-            
-            // cout << num << ' ';
-            // answer.push_back(num++);
+            cnt++;
+            dfs(nx, ny);
         }
     }
     
@@ -53,9 +50,8 @@ int main() {
         for(int j = 0; j < n; j++) {
             if(!visited[i][j] && map[i][j] == 1) {
                 visited[i][j] = true;
-                // int num = 1;
-                int cnt = dfs(i, j);
-                //return 0;
+                cnt = 1;
+                dfs(i, j);
                 answer.push_back(cnt);
             }
         }
