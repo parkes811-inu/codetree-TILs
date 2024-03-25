@@ -47,11 +47,6 @@ int main() {
     cin >> n >> m;
     int maxHeight = 0;
 
-    if(n == 2 && m == 2) {
-        cout << 1 << ' ' << 0;
-        return 0;
-    }
-    
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < m; j++) {
             cin >> map[i][j];
@@ -59,7 +54,7 @@ int main() {
         }
     }
 
-    int maxAreaCount = 0, resultK = 0;
+    int maxAreaCount = 0, resultK = 1;
 
     for(int k = 1; k <= maxHeight; k++) {
         init(k); // 맵 초기화
