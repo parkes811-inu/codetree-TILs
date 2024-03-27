@@ -8,8 +8,8 @@ pair<int, int> cur;
 
 queue<pair<int, int>> q;
 
-int map[101][101];
-bool visited[101][101];
+int map[102][102];
+bool visited[102][102];
 
 int answer;
 
