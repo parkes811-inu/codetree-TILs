@@ -37,9 +37,24 @@ void bfs() {
             if(InRange(nx, ny) && !visited[nx][ny] && map[nx][ny] < start) {
                 if(map[nx][ny] > maxNum) {
                     maxNum = map[nx][ny];
+                    cur.first = nx;
+                    cur.second = ny;
                 }
                 visited[nx][ny] = true;
                 q.push({nx, ny});
+            }
+
+            if(map[nx][ny] == maxNum) {
+                if(cur.first > nx) {
+                    cur.first = nx;
+                    cur.second = ny;
+                }
+                else if(cur.first == nx) {
+                    if(cur.second > ny) {
+                        cur.first = nx;
+                        cur.second = ny;
+                    }
+                }
             }
         }
     }
@@ -79,24 +94,25 @@ int main()
         q.push({cur.first, cur.second});
         start = map[cur.first][cur.second];
         bfs();
-        if(maxNum == -1) {
-            init();
-            continue;
-        }
-        for(int i = 1; i <= n; i++) {
-            bool check = true;
-            for(int j = 1; j <= n; j++) {
-                if(maxNum == map[i][j]) {
-                    cur.first = i;
-                    cur.second = j;
-                    check = false;
-                    break;
-                }
-            }
-            if(!check)
-                break;
-        }
 
+        // for(int i = 1; i <= n; i++) {
+        //     bool check = true;
+        //     for(int j = 1; j <= n; j++) {
+        //         if(maxNum == map[i][j]) {
+        //             cur.first = i;
+        //             cur.second = j;
+        //             check = false;
+        //             break;
+        //         }
+        //     }
+        //     if(!check)
+        //         break;
+        // }
+
+        if(maxNum == -1) {
+            cout << cur.first << ' ' << cur.second << '\n';
+            return 0;
+        }
         init();
     }
     cout << cur.first << ' ' << cur.second << '\n';
