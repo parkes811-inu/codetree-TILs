@@ -80,7 +80,8 @@ int main()
         start = map[cur.first][cur.second];
         bfs();
         if(maxNum == -1) {
-            break;
+            init();
+            continue;
         }
         for(int i = 1; i <= n; i++) {
             bool check = true;
