@@ -11,8 +11,6 @@ queue<pair<int, int>> q;
 int map[102][102];
 bool visited[102][102];
 
-int answer;
-
 int start;
 int maxNum;
 
@@ -24,9 +22,8 @@ bool InRange(int x, int y) {
 }
 
 void bfs() {
-
+    maxNum = -1; // 여기에서 maxNum을 초기화합니다.
     while(!q.empty()) {
-
         int x = q.front().first;
         int y = q.front().second;
         q.pop();
@@ -43,7 +40,6 @@ void bfs() {
             }
         }
     }
-    return;
 }
 
 void init() {
@@ -52,15 +48,11 @@ void init() {
             visited[i][j] = false;
         }
     }
-    while(!q.empty()) {
-        q.pop();
-    }
+    while (!q.empty()) q.pop(); // 큐를 올바르게 초기화합니다.
 }
 
 int main() 
 {
-    // 여기에 코드를 작성해주세요.
-
     cin >> n >> k;
 
     for(int i = 1; i <= n; i++) {
@@ -74,12 +66,14 @@ int main()
     cur.first = x, cur.second = y;
 
     for(int t = 0; t < k; t++) {
-        maxNum = -1;
         visited[cur.first][cur.second] = true;
         q.push({cur.first, cur.second});
         start = map[cur.first][cur.second];
         bfs();
         
+        if (maxNum == -1) break; // 새로 이동할 위치가 없으면 반복을 멈춥니다.
+        
+        // 새 위치를 찾는 로직...
         for(int i = 1; i <= n; i++) {
             bool check = true;
             for(int j = 1; j <= n; j++) {
@@ -92,13 +86,9 @@ int main()
             }
             if(!check)
                 break;
-        }
-        if(maxNum == -1) {
-                break;
-        }
         init();
-    }
+    }}
     cout << cur.first << ' ' << cur.second << '\n';
-
+    
     return 0;
 }
