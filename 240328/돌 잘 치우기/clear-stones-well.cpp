@@ -58,8 +58,6 @@ void choose(int next) {
             map[stones[v[i]].first][stones[v[i]].second] = 0;
         }
         init();
-        BFS();
-        answer = max(answer, cnt);
 
         for (int i = 0; i < s_pnts.size(); i++) {
             if (!visited[s_pnts[i].first][s_pnts[i].second]) {
@@ -68,7 +66,8 @@ void choose(int next) {
                 q.push({s_pnts[i].first, s_pnts[i].second});
             }
         }
-
+        BFS();
+        answer = max(answer, cnt);
         for (int i = 0; i < m; i++) {
             map[stones[v[i]].first][stones[v[i]].second] = 1;
         }
