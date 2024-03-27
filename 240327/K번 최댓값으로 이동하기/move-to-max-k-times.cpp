@@ -52,6 +52,9 @@ void init() {
             visited[i][j] = false;
         }
     }
+    for(int i = 0; i < q.size(); i++) {
+        q.pop();
+    }
 }
 
 int main() 
