@@ -52,7 +52,7 @@ void init() {
             visited[i][j] = false;
         }
     }
-    for(int i = 0; i < q.size(); i++) {
+    while(!q.empty()) {
         q.pop();
     }
 }
@@ -74,6 +74,7 @@ int main()
     cur.first = x, cur.second = y;
 
     for(int t = 0; t < k; t++) {
+        maxNum = -1;
         visited[cur.first][cur.second] = true;
         q.push({cur.first, cur.second});
         start = map[cur.first][cur.second];
@@ -83,7 +84,6 @@ int main()
             bool check = true;
             for(int j = 1; j <= n; j++) {
                 if(maxNum == map[i][j]) {
-                    maxNum = 0;
                     cur.first = i;
                     cur.second = j;
                     check = false;
@@ -92,9 +92,9 @@ int main()
             }
             if(!check)
                 break;
-            if(maxNum == 0) {
-            break;
         }
+        if(maxNum == -1) {
+                break;
         }
         init();
     }
