@@ -90,8 +90,11 @@ int main()
                     break;
                 }
             }
-             if(!check)
+            if(!check)
                 break;
+            if(maxNum == 0) {
+            break;
+        }
         }
         init();
     }
