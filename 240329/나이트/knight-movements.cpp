@@ -12,6 +12,7 @@ int dy[8] = {-2, -1, 1, 2, 2, 1, -1, -2};
 
 int n;
 int r1, c1, r2, c2;
+int cnt;
 
 bool InRange(int x, int y) {
     return (x > 0 && y > 0 && x <= n && y <= n);
@@ -23,6 +24,7 @@ void bfs() {
         int x = q.front().first;
         int y = q.front().second;
         q.pop();
+        cnt++;
 
         for(int i = 0; i < 8; i++) {
             int nx = x + dx[i];
@@ -42,14 +44,16 @@ int main() {
     cin >> n;
     cin >> r1 >> c1 >> r2 >> c2;
 
+    if(n < 3) {
+        cout << -1;
+        return 0;
+    }
+
     q.push({r1, c1});
     visited[r1][c1] = true;
     bfs();
 
-    if(dist[r2][c2] == 0) {
-        cout << -1;
-        return 0;
-    }
+
     cout << dist[r2][c2];
     return 0;
 }
