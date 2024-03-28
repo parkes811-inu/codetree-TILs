@@ -57,7 +57,10 @@ int main() {
     visited[r1][c1] = true;
     bfs();
 
-
+    if(!visited[r2][c2]) {
+        cout << -1;
+        return 0;
+    }
     cout << dist[r2][c2];
     return 0;
 }
