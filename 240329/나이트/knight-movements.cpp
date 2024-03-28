@@ -44,15 +44,6 @@ int main() {
     cin >> n;
     cin >> r1 >> c1 >> r2 >> c2;
 
-    if(r1 == r2 && c1 == c2) {
-        cout << 0;
-        return 0;
-    }
-    if(n < 3) {
-        cout << -1;
-        return 0;
-    }
-
     q.push({r1, c1});
     visited[r1][c1] = true;
     bfs();
