@@ -9,7 +9,7 @@ int n, k;
 
 int map[101][101];
 bool visited[101][101] = {false, };
-int dist[101][101];
+int dist[101][101] = {999, };
 queue<pair<int, int>> q;
 
 int dx[4] = {-1, 1, 0, 0};
@@ -31,9 +31,9 @@ void bfs() {
             int nx = x + dx[i];
             int ny = y + dy[i];
        
-            if(InRange(nx, ny) && !visited[nx][ny] && map[nx][ny] > 0) {
+            if(InRange(nx, ny) && !visited[nx][ny] && map[nx][ny] == 1) {
                 
-                // dist를 증가하는 조건 
+                // dist를 증가하는 조건
                 dist[nx][ny] = dist[x][y] + 1;
                 visited[nx][ny] = true;
                 q.push({nx, ny});
@@ -53,7 +53,7 @@ int main() {
                 orange.push_back({i, j});
             }
             if(map[i][j] == 1) {
-                dist[i][j] = -2; // 상하지 않는 귤을 위한 초기값 설정
+                //dist[i][j] = -2; // 상하지 않는 귤을 위한 초기값 설정
             } else {
                 dist[i][j] = -1; // 빈 칸을 위한 초기값 설정
             }
@@ -65,12 +65,15 @@ int main() {
         visited[orange[i].first][orange[i].second] = true;
         dist[orange[i].first][orange[i].second] = 0;
         q.push({orange[i].first, orange[i].second});
-        bfs();
+       
     }
     
-
+    bfs();
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
+            if(!visited[i][j] && map[i][j] == 1) {
+               dist[i][j] = -2;
+            }
             cout << dist[i][j] << ' ';
         }
         cout << '\n';
