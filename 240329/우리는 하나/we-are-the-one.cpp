@@ -34,7 +34,7 @@ void init() {
             visitedBFS[i][j] = false;
         }
     }
-    temp = 1;
+    temp = k;
 }
 
 bool InRange(int x, int y) {
@@ -64,13 +64,13 @@ void bfs() {
 void dfs(int cnt) {
     if(cnt == k) {
         // print();
-        for(int i = 0; i < k; i++) {
+        init();
+        for(int i = 0; i < list.size(); i++) {
             visitedBFS[list[i].first][list[i].second] = true;
             q.push({list[i].first, list[i].second});
             bfs();
-            answer = max(answer, temp);
         }
-        init();
+        answer = max(answer, temp);
         return;
     }
 
