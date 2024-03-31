@@ -1,114 +1,97 @@
 #include <iostream>
-#include <vector>
 #include <queue>
-#include <algorithm>
+#include <climits>
 
+#define MAX_N 100
 using namespace std;
 
-int n, h, m, cnt;
-int map[101][101];
-bool visited[101][101] = {false, };
-int dist[101][101];
+int n, h, m;    // n: 격자 크기, h: 사람 명수, m: 비를 피할 수 있는 공간 위치 개수
+int dirs[4][2] = {{1,0},{0,1},{-1,0},{0,-1}};  // 이동할 방향
+int grid[MAX_N][MAX_N];     // 0: 이동 가능, 1: 벽으로 이동 불가, 2: 사람, 3: 비를 피할 수 있는 공간
 
-vector<pair<int, int>> person;
-vector<pair<int, int>> escape;
-queue<pair<int, int>> q;
+// 탐색을 위한 자료구조
+queue<pair<int, int> > q;
+int step[MAX_N][MAX_N];
+bool visited[MAX_N][MAX_N];
+int curMin = INT_MAX;              // 현재 탐색을 진행하는 사람의 가장 가까운  쉘터까지의 거리
 
-int dx[4] = {-1, 1, 0, 0};
-int dy[4] = {0, 0, -1, 1};
+int result[MAX_N][MAX_N];   // 0: 사람X, 양수: 비를 피할 수 있는 공간까지 최소 시간, -1: 비를 피할 수 없음 
 
-bool InRange(int x, int y) {
-    return (x >= 0 && y >= 0 && x < n && y < n);
+bool InRange(int x, int y){   
+    return 0 <= x && x < n && 0 <= y && y < n;
 }
 
-void bfs() {
-    while(!q.empty()) {
-        int x = q.front().first;
-        int y = q.front().second;
+bool CanGo(int x, int y){
+    return InRange(x,y) && !visited[x][y] && grid[x][y] != 1;
+}
+
+void Initialize(){      // 탐색 전 초기화하는 함수
+    for(int i=0; i<n; i++)
+        for(int j=0; j<n; j++){
+            visited[i][j] = false;  // 방문 배열 flase로 초기화
+            step[i][j] = 0;         // 움직인 거리 초기화
+        }
+
+    curMin = INT_MAX;               // 가장 가까운 쉘터 공간까지의 거리 초기화
+    q = queue<pair<int, int> >();  // bfs 큐 초기화
+}
+
+void Push(int x, int y, int d){
+    q.push(make_pair(x,y));
+    visited[x][y] = true;
+    step[x][y] = d;
+}
+
+void bfs(){
+    bool findShelter = false;
+    while(!q.empty()){
+        pair<int, int> curr = q.front();     // 큐에서 제일 앞에 있는 원소 뽑기
         q.pop();
-
-        for(int i = 0; i < 4; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
-
-            if(map[nx][ny] == 3) {
-                visited[nx][ny] = true;
-                cnt++;
-                return;
-            }
-
-            if(InRange(nx, ny) && !visited[nx][ny] && map[nx][ny] != 1) {
-                cnt++;
-                visited[nx][ny] = true;
-                q.push({nx, ny});
+    
+        for(int d=0; d<4; d++){
+            int nx = curr.first + dirs[d][0], ny = curr.second + dirs[d][1];
+            if(CanGo(nx,ny)){ // 만약 다음 칸으로 갈 수 있다면
+                Push(nx,ny,step[curr.first][curr.second]+1);
+                if(grid[nx][ny] == 3){ // 그런데 그 다음 칸이 쉘터라면
+                    curMin = min(curMin, step[curr.first][curr.second]+1); // curMin 업데이트
+                    findShelter = true; // 쉘터 찾았다고 표시
+                    break; // 반복문 나가기
+                }
             }
         }
-    }
-}
-
-void answer() {
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            cout << dist[i][j] << ' ';
-        }
-        cout << '\n';
-    }
-}
-
-void init() {
-    cnt = 0;
-
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            //dist[i][j] = 0;
-            visited[i][j] = false;
-        }
+         // 만약 쉔터를 찾았다면 break
+        if(findShelter) break;
     }
 }
 
 int main() {
-    // 여기에 코드를 작성해주세요.
+    // 입력:
     cin >> n >> h >> m;
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            cin >> map[i][j];
-            if(map[i][j] == 2) {
-                dist[i][j] = -1;
-                person.push_back({i ,j});
-            }
-            if(map[i][j] == 3) {
-                escape.push_back({i, j});
+    for(int i=0; i<n; i++)
+        for(int j=0; j<n; j++)
+            cin >> grid[i][j];
+    
+    // 탐색 진행
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+            if(grid[i][j] == 2){    // 만약 사람이 서있다면
+                // 탐색 전 초기화하기
+                Initialize();
+                Push(i,j,0);
+                bfs();
+                if(curMin!=INT_MAX) 
+                    result[i][j] = curMin;
+                else
+                    result[i][j] = -1;
             }
         }
     }
 
-    for(int i = 0; i < person.size(); i++) {
-        // 사람 수 만큼 bfs를 하고, 출구를 방문한 적 이 잇으면 
-        // 멘하턴 거리로 가장 가까운 거리를 넣어줌.
-        // 안되면 그냥 -1
-        visited[person[i].first][person[i].second] = true;
-        q.push({person[i].first, person[i].second});
-        bfs();
-        for(int j = 0; j < escape.size(); j++) {
-            for(int k = 0; k < 4; k++) {
-                int nx = person[i].first + dx[k];
-                int ny = person[i].second + dy[k];
-
-                if (map[nx][ny] == 1) {
-                    dist[person[i].first][person[i].second] = cnt;
-                    break;    
-                }
-            }
-            if(visited[escape[j].first][escape[j].second]) {
-                
-                dist[person[i].first][person[i].second] 
-                    = max(cnt, abs(person[i].first - escape[j].first) + 
-                    abs(person[i].second - escape[j].second));
-            }
-        }
-        init();
+    // 출력
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++)
+            cout << result[i][j] << ' ';
+        cout << '\n';
     }
-
-    answer();
     return 0;
 }
