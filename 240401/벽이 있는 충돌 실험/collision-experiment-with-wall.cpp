@@ -1,97 +1,128 @@
 #include <iostream>
+#include <tuple>
 #include <vector>
-#include <algorithm> // std::remove_if 사용
+
+#define DIR_NUM 4
+#define MAX_N 50
+#define ASCII_NUM 128
 
 using namespace std;
 
-// 위, 아래, 왼쪽, 오른쪽
-int dx[4] = {-1, 1, 0, 0};
-int dy[4] = {0, 0, -1, 1};
+typedef tuple<int, int, int> Marble;
 
-struct Marble {
-    int x, y;
-    char dir;
-    bool removed = false; // 구슬이 제거되었는지 표시
-};
+// 전역 변수 선언:
+int t, n, m;
+
+int mapper[ASCII_NUM];
+
+// 후에 구슬이 벽에 부딪혔을 때의 처리를 간단히 하기 위해
+// dir 기준 0, 3이 대칭 1, 2가 대칭이 되도록 설정합니다.
+int dx[DIR_NUM] = {-1, 0, 0, 1};
+int dy[DIR_NUM] = {0, 1, -1, 0};
 
 vector<Marble> marbles;
-int n, m;
 
+// 해당 위치가 격자 안에 들어와 있는지 확인합니다.
 bool InRange(int x, int y) {
-    return (x >= 0 && y >= 0 && x < n && y < n);
+    return 1 <= x && x <= n && 1 <= y && y <= n;
 }
 
-char ReverseDir(char dir) {
-    switch (dir) {
-        case 'U': return 'D';
-        case 'D': return 'U';
-        case 'L': return 'R';
-        case 'R': return 'L';
-    }
-    return dir; // 기본 경우
+// 해당 구슬이 1초 후에 어떤 위치에서 어떤 방향을 보고 있는지를 구해
+// 그 상태를 반환합니다.
+Marble Move(Marble marble) {
+    // tuple의 경우 다음과 같이 원하는 변수에 값을 뽑아줄 수 있습니다.
+    int x, y, dir;
+    tie(x, y, dir) = marble;
+
+    // 바로 앞에 벽이 있는지 판단합니다.
+    int nx = x + dx[dir], ny = y + dy[dir];
+    
+    // Case 1 : 벽이 없는 경우에는 그대로 한 칸 전진합니다.
+    if(InRange(nx, ny))
+        return make_tuple(nx, ny, dir);
+    // Case 2 : 벽이 있는 경우에는 방향을 반대로 틀어줍니다.
+    // 처음에 dx, dy를 dir 기준 0, 3이 대칭 1, 2가 대칭이 되도록
+    // 설정해놨기 때문에 간단하게 처리가 가능합니다.
+    else
+        return make_tuple(x, y, 3 - dir);
 }
 
-void MoveAndDetectCollisions() {
-    // 구슬 이동
-    for (auto& marble : marbles) {
-        int dirIndex;
-        if (marble.dir == 'U') dirIndex = 0;
-        else if (marble.dir == 'D') dirIndex = 1;
-        else if (marble.dir == 'L') dirIndex = 2;
-        else if (marble.dir == 'R') dirIndex = 3;
+// 구슬을 전부 한 번씩 움직여 봅니다.
+void MoveAll() {
+    for(int i = 0; i < (int) marbles.size(); i++)
+        marbles[i] = Move(marbles[i]);
+}
 
-        int nx = marble.x + dx[dirIndex];
-        int ny = marble.y + dy[dirIndex];
+// 해당 구슬과 충돌이 일어나는 구슬이 있는지 확인합니다.
+// 자신을 제외한 구슬 중에 위치가 동일한 구슬이 있는지 확인하면 됩니다.
+bool DuplicateMarbleExist(int target_idx) {
+    int target_x, target_y;
+    tie(target_x, target_y, ignore) = marbles[target_idx];
 
-        // 벽에 부딪혔을 경우
-        if (!InRange(nx, ny)) {
-            marble.dir = ReverseDir(marble.dir); // 방향 반전
-        } else {
-            marble.x = nx;
-            marble.y = ny;
-        }
+    for(int i = 0; i < (int) marbles.size(); i++) {
+        if(i == target_idx)
+            continue;
+        
+        int mx, my;
+        tie(mx, my, ignore) = marbles[i];
+
+        if(target_x == mx && target_y == my)
+            return true;
     }
 
-    // 충돌 검출
-    for (int i = 0; i < marbles.size(); i++) {
-        if (marbles[i].removed) continue; // 이미 제거된 구슬은 무시
-        for (int j = i + 1; j < marbles.size(); j++) {
-            if (marbles[j].removed) continue;
-            if (marbles[i].x == marbles[j].x && marbles[i].y == marbles[j].y) {
-                // 두 구슬이 같은 위치에 있으면 제거
-                marbles[i].removed = marbles[j].removed = true;
-            }
-        }
-    }
+    return false;
+}
 
-    // 제거된 구슬 제거
-    marbles.erase(remove_if(marbles.begin(), marbles.end(), [](const Marble& marble) {
-        return marble.removed; // 제거된 구슬을 벡터에서 제거
-    }), marbles.end());
+// 충돌이 일어나는 구슬은 전부 지워줍니다.
+void RemoveDuplicateMarbles() {
+    vector<Marble> temp_vector;
+
+    for(int i = 0; i < (int) marbles.size(); i++)
+        if(!DuplicateMarbleExist(i))
+            temp_vector.push_back(marbles[i]);
+    
+    marbles = temp_vector;
+}
+
+// 조건에 맞춰 시뮬레이션을 진행합니다.
+void Simulate() {
+    // Step1
+    // 구슬을 전부 한 번씩 움직여 봅니다.
+    MoveAll();
+
+    // Step2
+    // 움직임 이후에 충돌이 일어나는 구슬들을 골라 목록에서 지워줍니다.
+    RemoveDuplicateMarbles();
 }
 
 int main() {
-    int t;
+    mapper['U'] = 0;
+    mapper['R'] = 1;
+    mapper['L'] = 2;
+    mapper['D'] = 3;
+
+    // 테스트 케이스 수 입력:
     cin >> t;
 
-    while (t--) {
-        cin >> n >> m;
+    while(t--) {
+        // 새로운 테스트 케이스가 시작될때마다 기존에 사용하던 값들을 초기화해줍니다.
         marbles.clear();
-        marbles.resize(m);
 
-        for (int i = 0; i < m; i++) {
-            cin >> marbles[i].x >> marbles[i].y >> marbles[i].dir;
-            marbles[i].x--; // 0-based 인덱스 조정
-            marbles[i].y--;
-            marbles[i].removed = false; // 초기화
+        // 입력:
+        cin >> n >> m;
+        for(int i = 1; i <= m; i++) {
+            int x, y; char d;
+            cin >> x >> y >> d;
+            marbles.push_back(make_tuple(x, y, mapper[d]));
         }
 
-        // 충분한 시간 동안 구슬 이동 시도
-        for (int time = 0; time < 2 * n; time++) {
-            MoveAndDetectCollisions();
-        }
-
-        cout << marbles.size() << endl;
+        // 2*n번 이후에는 충돌이 절대 일어날 수 없으므로
+        // 시뮬레이션을 총 2*n번 진행합니다.
+        for(int i = 1; i <= 2 * n; i++)
+            Simulate();
+        
+        // 출력:
+        cout << (int) marbles.size() << endl;
     }
 
     return 0;
