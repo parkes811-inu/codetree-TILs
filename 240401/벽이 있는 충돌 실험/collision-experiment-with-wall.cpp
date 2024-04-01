@@ -13,6 +13,8 @@ typedef tuple<int, int, int> Marble;
 // 전역 변수 선언:
 int t, n, m;
 
+int marble_cnt[MAX_N + 1][MAX_N + 1];
+
 int mapper[ASCII_NUM];
 
 // 후에 구슬이 벽에 부딪혔을 때의 처리를 간단히 하기 위해
@@ -54,33 +56,39 @@ void MoveAll() {
 }
 
 // 해당 구슬과 충돌이 일어나는 구슬이 있는지 확인합니다.
-// 자신을 제외한 구슬 중에 위치가 동일한 구슬이 있는지 확인하면 됩니다.
+// 이를 위해 자신의 현재 위치에 놓인 구슬의 개수가 
+// 자신을 포함하여 2개 이상인지 확인합니다.
 bool DuplicateMarbleExist(int target_idx) {
     int target_x, target_y;
     tie(target_x, target_y, ignore) = marbles[target_idx];
 
-    for(int i = 0; i < (int) marbles.size(); i++) {
-        if(i == target_idx)
-            continue;
-        
-        int mx, my;
-        tie(mx, my, ignore) = marbles[i];
-
-        if(target_x == mx && target_y == my)
-            return true;
-    }
-
-    return false;
+    return marble_cnt[target_x][target_y] >= 2;
 }
 
 // 충돌이 일어나는 구슬은 전부 지워줍니다.
 void RemoveDuplicateMarbles() {
     vector<Marble> temp_vector;
+    
+    // Step2-1 : 각 구슬의 위치에 count를 증가시킵니다.
+    for(int i = 0; i < (int) marbles.size(); i++) {
+        int x, y;
+        tie(x, y, ignore) = marbles[i];
+        marble_cnt[x][y]++;
+    }
 
+    // Step2-2 : 충돌이 일어나지 않는 구슬만 전부 기록합니다.
     for(int i = 0; i < (int) marbles.size(); i++)
         if(!DuplicateMarbleExist(i))
             temp_vector.push_back(marbles[i]);
-    
+
+    // Step2-3 : 나중을 위해 각 구슬의 위치에 적어놓은 count 수를 다시 초기화합니다.
+    for(int i = 0; i < (int) marbles.size(); i++) {
+        int x, y;
+        tie(x, y, ignore) = marbles[i];
+        marble_cnt[x][y]--;
+    }
+
+    // step2-4 : 충돌이 일어나지 않은 구슬들로 다시 채워줍니다.
     marbles = temp_vector;
 }
 
