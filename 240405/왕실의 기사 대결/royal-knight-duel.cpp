@@ -1,110 +1,107 @@
 #include <iostream>
-#include <vector>
 #include <queue>
+#include <cstring>
+
+#define MAX_N 41
+#define MAX_L 41
+#define TRAP 1
+#define WALL 2
 using namespace std;
 
-struct Knight {
-    int r, c, h, w, k; // 위치(r, c), 크기(h, w), 체력(k)
-    bool isAlive = true; // 기사가 살아있는지 여부
-};
+int L, N;
+int grid[MAX_N][MAX_N];
 
-int L, N, Q;
-vector<vector<int>> map; // 체스판 정보 (0: 빈칸, 1: 함정, 2: 벽)
-vector<Knight> knights; // 모든 기사들의 정보
+int r[MAX_N], c[MAX_N], h[MAX_N], w[MAX_N], k[MAX_N];
+int bef_k[MAX_N];
+int nr[MAX_N], nc[MAX_N];
+int dmg[MAX_N];
+bool is_moved[MAX_N];
 
-int answer;
+int dy[4] = { -1,0,1,0 }, dx[4] = { 0,1,0,-1 };
 
-int dx[4] = {-1, 0, 1, 0}; // 상, 우, 하, 좌 방향 벡터
-int dy[4] = {0, 1, 0, -1};
 
-// 지정된 위치가 체스판 범위 내에 있는지 확인
-bool InRange(int x, int y) {
-    return x >= 1 && x <= L && y >= 1 && y <= L;
-}
+bool TryMove(int id, int dir) {
+    memset(is_moved, 0, sizeof(is_moved));
+    memset(dmg, 0, sizeof(dmg));
 
-// 지정된 위치에 함정이 있는지 확인
-bool IsTrap(int x, int y) {
-    return InRange(x, y) && map[x][y] == 1;
-}
+    queue<int> q;
+    q.push(id);
+    is_moved[id] = true;
+    while (!q.empty()) {
+        int cid = q.front(); q.pop();
 
-// 지정된 위치에 벽이 있는지 확인
-bool IsWall(int x, int y) {
-    return !InRange(x, y) || map[x][y] == 2;
-}
+        //sy sx ~ ey ex
+        int sy = r[cid] + dy[dir], sx = c[cid] + dx[dir];
+        int ey = sy + h[cid] - 1, ex = sx + w[cid] - 1;
+        nr[cid] = sy, nc[cid] = sx;
 
-// 해당 방향으로 이동할 때 모든 기사가 이동 가능한지 확인
-bool CanMove(int dir) {
-    for (const auto& knight : knights) {
-        if (knight.isAlive) {
-            int nx = knight.r + dx[dir];
-            int ny = knight.c + dy[dir];
-            // 벽이 있으면 이동 불가
-            if (IsWall(nx, ny)) return false;
+        //모두 범위 내에 있어야하고 
+        if (sy < 1 || sx < 1 || L < ey || L < ex) 
+            return false;
+
+        //내부에 벽이 있으면 안된다.
+        //내부 벽 찾으며 동시에 대미지 계산
+        for (int i = sy; i <= ey; i++) {
+            for (int j = sx; j <= ex; j++) {
+                if (grid[i][j] == WALL) return false;
+                if (grid[i][j] == TRAP) dmg[cid]++;
+            }
+        }
+        //id 전체 돌며 사각형 내부에 id 있으면 넣어 
+        //안움직인거라면
+        for (int i = 1; i <= N; i++) {
+            if (is_moved[i] || k[i] <= 0) continue;
+            if (r[i] + h[i] - 1 < sy || ey < r[i]) continue;
+            if (c[i] + w[i] - 1 < sx || ex < c[i]) continue;
+            q.push(i);
+            is_moved[i] = true;
         }
     }
+    dmg[id] = 0;
     return true;
 }
 
-// 기사 이동 처리
-void MoveKnights(int dir) {
-    if (!CanMove(dir)) return; // 이동할 수 없는 경우
 
-    for (auto& knight : knights) {
-        if (knight.isAlive) {
-            knight.r += dx[dir];
-            knight.c += dy[dir];
-        }
-    }
-}
+void Move(int id, int dir) {
+    if (k[id] <= 0) return;
 
-// 대미지 처리
-void ApplyDamage() {
-    int totalDamage = 0;
-    for (auto& knight : knights) {
-        if (knight.isAlive) {
-            int damage = 0;
-            // 기사가 차지하는 영역 내의 모든 함정 확인
-            for (int i = 0; i < knight.h; ++i) {
-                for (int j = 0; j < knight.w; ++j) {
-                    if (IsTrap(knight.r + i, knight.c + j)) {
-                        damage++;
-                    }
-                }
+    if (TryMove(id, dir)) {
+        for (int i = 1; i <= N; i++) {
+            if (is_moved[i]) {
+                r[i] = nr[i], c[i] = nc[i];
+                k[i] -= dmg[i];
             }
-            knight.k -= damage; // 체력 감소
-            totalDamage += damage; // 총 대미지 계산
-            if (knight.k <= 0) knight.isAlive = false; // 기사 사망 처리
         }
     }
-    answer = answer + totalDamage;
 }
 
 int main() {
+    ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+
+    int Q;
     cin >> L >> N >> Q;
-    map.resize(L + 1, vector<int>(L + 1));
-    knights.resize(N);
-
-    // 체스판 정보 입력
-    for (int i = 1; i <= L; ++i) {
-        for (int j = 1; j <= L; ++j) {
-            cin >> map[i][j];
-        }
+    for (int i = 1; i <= L; i++)
+        for (int j = 1; j <= L; j++)
+            cin >> grid[i][j];   
+            
+    for (int i = 1; i <= N; i++) {
+        cin >> r[i] >> c[i] >> h[i] >> w[i] >> k[i];
+        bef_k[i] = k[i];
     }
 
-    // 기사 정보 입력
-    for (int i = 0; i < N; ++i) {
-        cin >> knights[i].r >> knights[i].c >> knights[i].h >> knights[i].w >> knights[i].k;
-    }
-
-    // 명령 처리
-    for (int i = 0; i < Q; ++i) {
+    while (Q--) {
         int id, dir;
-        cin >> id >> dir; // 기사 ID와 이동 방향
-        if (knights[id-1].isAlive) { // 사라지지 않은 기사에 대해서만 처리
-            MoveKnights(dir);
-            ApplyDamage(); // 이동 후 대미지 처리
+        cin >> id >> dir;
+        Move(id, dir);
+    }
+
+    long long ans = 0;
+    for (int i = 1; i <= N; i++) {
+        if (k[i] > 0) {
+            ans += bef_k[i] - k[i];
         }
     }
-    cout << answer;
+
+    cout << ans;
     return 0;
 }
